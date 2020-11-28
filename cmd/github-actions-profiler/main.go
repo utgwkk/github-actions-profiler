@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"flag"
-	"fmt"
 	"log"
 	"os"
 
@@ -11,111 +10,80 @@ import (
 	ghaprofiler "github.com/utgwkk/github-actions-profiler"
 )
 
-var owner string
-var repo string
-var workflowFileName string
-var count int
-var accessToken string
-var format string
-var sortBy string
-var reverse bool
-var verbose bool
+var config *ghaprofiler.ProfileConfig = ghaprofiler.DefaultProfileConfig()
 
 const accessTokenEnvVariableName = "GITHUB_ACTIONS_PROFILER_TOKEN"
 
 func init() {
-	flag.StringVar(&owner, "owner", "", "Repository owner name")
-	flag.StringVar(&repo, "repo", "", "Repository name")
-	flag.StringVar(&workflowFileName, "workflow_file", "", "Workflow file name")
-	flag.StringVar(&accessToken, "token", "", "Access token. You can pass it with "+accessTokenEnvVariableName+" environment variable")
-	flag.IntVar(&count, "count", 20, "Count")
-	flag.StringVar(&format, "format", "table", "Output format. Supported formats are: "+ghaprofiler.AvailableFormats())
-	flag.StringVar(&sortBy, "sort", "number", "A filed name to sort by. Supported values are"+ghaprofiler.AvailableSortFieldsForCLI())
-	flag.BoolVar(&reverse, "reverse", false, "Reverse the result of sort")
-	flag.BoolVar(&verbose, "verbose", false, "Verbose mode")
-}
-
-func validateFlags() error {
-	if owner == "" {
-		return fmt.Errorf("Repository owner name required")
-	}
-	if repo == "" {
-		return fmt.Errorf("Repository name required")
-	}
-	if workflowFileName == "" {
-		return fmt.Errorf("Workflow file name required")
-	}
-	if count <= 0 {
-		return fmt.Errorf("Count must be a positive integer")
-	}
-	if !ghaprofiler.IsValidFormatName(format) {
-		return fmt.Errorf("Invalid format: %s", format)
-	}
-	if !ghaprofiler.IsValidSortFieldName(sortBy) {
-		return fmt.Errorf("Invalid sort field name: %s", sortBy)
-	}
-
-	return nil
+	flag.StringVar(&config.Owner, "owner", "", "Repository owner name")
+	flag.StringVar(&config.Repository, "repo", "", "Repository name")
+	flag.StringVar(&config.WorkflowFileName, "workflow_file", "", "Workflow file name")
+	flag.StringVar(&config.AccessToken, "token", "", "Access token. You can pass it with "+accessTokenEnvVariableName+" environment variable")
+	flag.IntVar(&config.Count, "count", 20, "Count")
+	flag.StringVar(&config.Format, "format", "table", "Output format. Supported formats are: "+ghaprofiler.AvailableFormats())
+	flag.StringVar(&config.SortBy, "sort", "number", "A filed name to sort by. Supported values are"+ghaprofiler.AvailableSortFieldsForCLI())
+	flag.BoolVar(&config.Reverse, "reverse", false, "Reverse the result of sort")
+	flag.BoolVar(&config.Verbose, "verbose", false, "Verbose mode")
 }
 
 func main() {
 	ctx := context.Background()
 	flag.Parse()
 
-	if verbose {
-		log.Printf("count=%v\n", count)
-		log.Printf("format=%v\n", format)
-		log.Printf("owner=%v\n", owner)
-		log.Printf("repo=%v\n", repo)
-		log.Printf("reverse=%v\n", reverse)
-		log.Printf("sort=%v\n", sortBy)
+	if config.Verbose {
+		log.Printf("count=%v\n", config.Count)
+		log.Printf("format=%v\n", config.Format)
+		log.Printf("owner=%v\n", config.Owner)
+		log.Printf("repo=%v\n", config.Repository)
+		log.Printf("reverse=%v\n", config.Reverse)
+		log.Printf("sort=%v\n", config.SortBy)
 		// We don't write out token
-		log.Printf("workflow_file=%v\n", workflowFileName)
+		log.Printf("workflow_file=%v\n", config.WorkflowFileName)
 	}
 
-	if err := validateFlags(); err != nil {
+	if err := config.Validate(); err != nil {
 		log.Fatal(err)
 	}
 
-	if accessToken == "" {
+	if config.AccessToken == "" {
 		accessTokenFromEnv := os.Getenv(accessTokenEnvVariableName)
 		if accessTokenFromEnv != "" {
-			accessToken = accessTokenFromEnv
+			config.AccessToken = accessTokenFromEnv
 		}
 	}
 
 	client := ghaprofiler.NewClientWithConfig(ctx, &ghaprofiler.ClientConfig{
-		AccessToken: accessToken,
+		AccessToken: config.AccessToken,
 	})
 
 	listWorkflowRunsOpts := &github.ListWorkflowRunsOptions{
 		ListOptions: github.ListOptions{
-			PerPage: count,
+			PerPage: config.Count,
 		},
 	}
 
-	if verbose {
+	if config.Verbose {
 		log.Println("ListWorkflowRunsByFileName start")
 	}
-	workflowRuns, _, err := client.ListWorkflowRunsByFileName(ctx, owner, repo, workflowFileName, listWorkflowRunsOpts)
+	workflowRuns, _, err := client.ListWorkflowRunsByFileName(ctx, config.Owner, config.Repository, config.WorkflowFileName, listWorkflowRunsOpts)
 	if err != nil {
 		log.Fatal(err)
 	}
-	if verbose {
+	if config.Verbose {
 		log.Println("ListWorkflowRunsByFileName finish")
 	}
 
 	jobsByJobName := make(map[string][]*github.WorkflowJob)
 
 	for _, run := range workflowRuns.WorkflowRuns {
-		if verbose {
+		if config.Verbose {
 			log.Printf("ListWorkflowJobs start: run_id=%d", *run.ID)
 		}
-		jobs, _, err := client.ListWorkflowJobs(ctx, owner, repo, *run.ID, nil)
+		jobs, _, err := client.ListWorkflowJobs(ctx, config.Owner, config.Repository, *run.ID, nil)
 		if err != nil {
 			log.Fatal(err)
 		}
-		if verbose {
+		if config.Verbose {
 			log.Printf("ListWorkflowJobs finish: run_id=%d", *run.ID)
 		}
 
@@ -140,13 +108,13 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		err = ghaprofiler.SortProfileBy(stepProfile, sortBy)
+		err = ghaprofiler.SortProfileBy(stepProfile, config.SortBy)
 		if err != nil {
 			log.Fatal(err)
 		}
 
 		// reverse slice
-		if reverse {
+		if config.Reverse {
 			reversedStepProfile := make(ghaprofiler.TaskStepProfileResult, len(stepProfile))
 			for i := 0; i < len(stepProfile); i++ {
 				j := len(stepProfile) - i - 1
@@ -166,5 +134,5 @@ func main() {
 		})
 	}
 
-	ghaprofiler.WriteWithFormat(os.Stdout, profileFormatterInput, format)
+	ghaprofiler.WriteWithFormat(os.Stdout, profileFormatterInput, config.Format)
 }

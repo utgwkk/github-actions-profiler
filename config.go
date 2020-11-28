@@ -3,6 +3,7 @@ package ghaprofiler
 import (
 	"fmt"
 	"io/ioutil"
+	"regexp"
 
 	"github.com/pelletier/go-toml"
 )
@@ -17,6 +18,7 @@ type ProfileConfig struct {
 	SortBy           string `toml:"sort"`
 	Reverse          bool   `toml:"reverse"`
 	Verbose          bool   `toml:"verbose"`
+	JobNameRegex     string `toml:"job_name_regex"`
 }
 
 func DefaultProfileConfig() *ProfileConfig {
@@ -45,6 +47,9 @@ func (config ProfileConfig) Validate() error {
 	}
 	if !IsValidSortFieldName(config.SortBy) {
 		return fmt.Errorf("Invalid sort field name: %s", config.SortBy)
+	}
+	if _, err := regexp.Compile(config.JobNameRegex); err != nil {
+		return fmt.Errorf("Invalid regular expression: %v", err)
 	}
 
 	return nil

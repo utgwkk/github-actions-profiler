@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"os"
+	"regexp"
 	"sort"
 
 	"github.com/google/go-github/v32/github"
@@ -43,6 +44,7 @@ func main() {
 		log.Printf("config=%v\n", configTomlPath)
 		log.Printf("count=%v\n", config.Count)
 		log.Printf("format=%v\n", config.Format)
+		log.Printf("job-name-regex=%v\n", config.JobNameRegex)
 		log.Printf("owner=%v\n", config.Owner)
 		log.Printf("repo=%v\n", config.Repository)
 		log.Printf("reverse=%v\n", config.Reverse)
@@ -60,6 +62,11 @@ func main() {
 		if accessTokenFromEnv != "" {
 			config.AccessToken = accessTokenFromEnv
 		}
+	}
+
+	jobNameRegex, err := regexp.Compile(config.JobNameRegex)
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	client := ghaprofiler.NewClientWithConfig(ctx, &ghaprofiler.ClientConfig{
@@ -98,6 +105,9 @@ func main() {
 		}
 
 		for _, job := range jobs.Jobs {
+			if !jobNameRegex.MatchString(*job.Name) {
+				continue
+			}
 			jobsByJobName[*job.Name] = append(jobsByJobName[*job.Name], job)
 		}
 	}

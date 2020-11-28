@@ -49,27 +49,22 @@ func SortProfileBy(profile TaskStepProfileResult, fieldName string) error {
 		by = func(t1, t2 *TaskStepProfile) bool {
 			return t1.Number < t2.Number
 		}
-		break
 	case "min":
 		by = func(t1, t2 *TaskStepProfile) bool {
 			return t1.Min < t2.Min
 		}
-		break
 	case "max":
 		by = func(t1, t2 *TaskStepProfile) bool {
 			return t1.Max < t2.Max
 		}
-		break
 	case "mean":
 		by = func(t1, t2 *TaskStepProfile) bool {
 			return t1.Mean < t2.Mean
 		}
-		break
 	case "median":
 		by = func(t1, t2 *TaskStepProfile) bool {
 			return t1.Median < t2.Median
 		}
-		break
 	default:
 		return fmt.Errorf("Invalid field: %s", fieldName)
 	}

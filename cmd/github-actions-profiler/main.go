@@ -21,7 +21,8 @@ func main() {
 	args := os.Args[1:]
 	args, err := flags.ParseArgs(&configFromArgs, args)
 	if err != nil {
-		log.Fatal(err)
+		// flags.ParseArgs() outputs error message, so discarding it here...
+		return
 	}
 
 	var configTomlPath string

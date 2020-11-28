@@ -10,6 +10,26 @@ go get github.com/utgwkk/github-actions-profiler/cmd/github-actions-profiler
 
 ## Configuration
 
+### Arguments
+
+|arguments|type|description|
+|:-|:-|:-|
+|`access_token`|`string`|An access token|
+|`count`|`int`|Count <!-- TODO: write more detail -->|
+|`format`|`string`|Output format|
+|`owner`|`string`|Repository owner name|
+|`repository`|`string`|Repository name|
+|`reverse`|`bool`|Reverse the result of sort|
+|`sort`|`string`|A filed name to sort by.|
+|`verbose`|`bool`|Verbose mode|
+|`workflow_file`|`string`|Workflow file name (without `.github/workflows/`)|
+
+### Passing access token with a environment variable
+
+You may pass `access_token` with `GITHUB_ACTIONS_PROFILER_TOKEN` environment variable.
+
+### TOML
+
 You may set configuration with a TOML file and pass it with `-config <path to config.toml>`.
 
 ```toml

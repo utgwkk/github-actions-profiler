@@ -21,7 +21,8 @@ func init() {
 	flag.StringVar(&configFromArgs.Repository, "repository", "", "Repository name")
 	flag.StringVar(&configFromArgs.WorkflowFileName, "workflow_file", "", "Workflow file name")
 	flag.StringVar(&configFromArgs.AccessToken, "access_token", "", "Access token. You can pass it with "+accessTokenEnvVariableName+" environment variable")
-	flag.IntVar(&configFromArgs.Count, "count", 20, "Count")
+	// XXX: Set default count to 0 but its actually default value is 20
+	flag.IntVar(&configFromArgs.Count, "count", 0, "Count (default 20)")
 	flag.StringVar(&configFromArgs.Format, "format", "table", "Output format. Supported formats are: "+ghaprofiler.AvailableFormatsForCLI())
 	flag.StringVar(&configFromArgs.SortBy, "sort", "number", "A field name to sort by. Supported values are: "+ghaprofiler.AvailableSortFieldsForCLI())
 	flag.BoolVar(&configFromArgs.Reverse, "reverse", false, "Reverse the result of sort")
@@ -42,6 +43,14 @@ func main() {
 		config = configFromTOML
 	} else {
 		config = configFromArgs
+	}
+
+	// Override some settings
+	if configFromArgs.Count > 0 {
+		config.Count = configFromArgs.Count
+	}
+	if config.Count == 0 {
+		config.Count = 20
 	}
 
 	if configFromArgs.Verbose {

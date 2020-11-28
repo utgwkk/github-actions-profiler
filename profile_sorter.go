@@ -12,6 +12,10 @@ var availableSortFields = []string{
 	"max",
 	"mean",
 	"median",
+	"p50",
+	"p90",
+	"p95",
+	"p99",
 }
 
 type taskStepProfileSorter struct {
@@ -64,6 +68,22 @@ func SortProfileBy(profile TaskStepProfileResult, fieldName string) error {
 	case "median":
 		by = func(t1, t2 *TaskStepProfile) bool {
 			return t1.Median < t2.Median
+		}
+	case "p50":
+		by = func(t1, t2 *TaskStepProfile) bool {
+			return t1.Percentile50 < t2.Percentile50
+		}
+	case "p90":
+		by = func(t1, t2 *TaskStepProfile) bool {
+			return t1.Percentile90 < t2.Percentile90
+		}
+	case "p95":
+		by = func(t1, t2 *TaskStepProfile) bool {
+			return t1.Percentile95 < t2.Percentile95
+		}
+	case "p99":
+		by = func(t1, t2 *TaskStepProfile) bool {
+			return t1.Percentile99 < t2.Percentile99
 		}
 	default:
 		return fmt.Errorf("Invalid field: %s", fieldName)

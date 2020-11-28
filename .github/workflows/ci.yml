@@ -22,7 +22,7 @@ jobs:
         go-version: ${{ matrix.go-version }}
 
     - name: Install dependencies
-      run: go get -v -t -d ./...
+      run: go get -v ./...
 
     - name: Test
       run: go test -v .

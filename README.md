@@ -20,7 +20,7 @@ go get github.com/utgwkk/github-actions-profiler/cmd/github-actions-profiler
 |`owner`|`string`|Repository owner name|
 |`repository`|`string`|Repository name|
 |`reverse`|`bool`|Reverse the result of sort|
-|`sort`|`string`|A filed name to sort by.|
+|`sort`|`string`|A field name to sort by.|
 |`verbose`|`bool`|Verbose mode|
 |`workflow_file`|`string`|Workflow file name (without `.github/workflows/`)|
 

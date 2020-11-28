@@ -26,7 +26,7 @@ func init() {
 	flag.StringVar(&configFromArgs.SortBy, "sort", "number", "A filed name to sort by. Supported values are"+ghaprofiler.AvailableSortFieldsForCLI())
 	flag.BoolVar(&configFromArgs.Reverse, "reverse", false, "Reverse the result of sort")
 	flag.BoolVar(&configFromArgs.Verbose, "verbose", false, "Verbose mode")
-	flag.StringVar(&configTomlPath, "config", "", "Path to configuration TOML file. Note that settings in TOML are overwritten with command-line arguments")
+	flag.StringVar(&configTomlPath, "config", "", "Path to configuration TOML file. Note that settings in command-line arguments are overwritten with TOML")
 }
 
 func main() {
@@ -38,7 +38,7 @@ func main() {
 		if err != nil {
 			log.Fatalf("Failed to load %s: %v", configTomlPath, err)
 		}
-		configFromTOML.OverrideConfig(configFromArgs)
+		// TODO: Override config with CLI arguments when they are given
 		config = configFromTOML
 	} else {
 		config = configFromArgs

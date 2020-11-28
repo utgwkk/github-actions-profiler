@@ -1,6 +1,11 @@
 package ghaprofiler
 
-import "fmt"
+import (
+	"fmt"
+	"io/ioutil"
+
+	"github.com/BurntSushi/toml"
+)
 
 type ProfileConfig struct {
 	Owner            string `toml:"owner"`
@@ -43,4 +48,20 @@ func (config ProfileConfig) Validate() error {
 	}
 
 	return nil
+}
+
+func LoadConfigFromTOML(filename string) (*ProfileConfig, error) {
+	config := &ProfileConfig{}
+
+	p, err := ioutil.ReadFile(filename)
+	if err != nil {
+		return nil, err
+	}
+
+	err = toml.Unmarshal(p, config)
+	if err != nil {
+		return nil, err
+	}
+
+	return config, nil
 }

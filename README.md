@@ -17,7 +17,7 @@ go get github.com/utgwkk/github-actions-profiler/cmd/github-actions-profiler
 |`access_token`|`string`|An access token|
 |`count`|`int`|Count <!-- TODO: write more detail -->|
 |`format`|`string`|Output format (Supported: `table`, `json`)|
-|`job-name-regex`|`string`|Filter regular expression for a job name|
+|`job-name-regexp`|`string`|Filter regular expression for a job name|
 |`owner`|`string`|Repository owner name|
 |`repository`|`string`|Repository name|
 |`reverse`|`bool`|Reverse the result of sort|
@@ -37,7 +37,7 @@ You may set configuration with a TOML file and pass it with `--config <path to c
 access_token = "YOUR_ACCESS_TOKEN"
 count = 50
 format = "table"
-job_name_regex = "Perl"
+job_name_regexp = "Perl"
 owner = "your-name"
 repository = "your-repository"
 reverse = true

@@ -44,7 +44,7 @@ func main() {
 		log.Printf("config=%v\n", configTomlPath)
 		log.Printf("count=%v\n", config.Count)
 		log.Printf("format=%v\n", config.Format)
-		log.Printf("job-name-regex=%v\n", config.JobNameRegex)
+		log.Printf("job-name-regexp=%v\n", config.JobNameRegexp)
 		log.Printf("owner=%v\n", config.Owner)
 		log.Printf("repo=%v\n", config.Repository)
 		log.Printf("reverse=%v\n", config.Reverse)
@@ -64,7 +64,7 @@ func main() {
 		}
 	}
 
-	jobNameRegex, err := regexp.Compile(config.JobNameRegex)
+	jobNameRegex, err := regexp.Compile(config.JobNameRegexp)
 	if err != nil {
 		log.Fatal(err)
 	}

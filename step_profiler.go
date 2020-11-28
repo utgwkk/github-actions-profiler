@@ -62,9 +62,5 @@ func ProfileTaskStep(steps []*github.TaskStep) (profileResult TaskStepProfileRes
 		})
 	}
 
-	taskStepProfileSortBy(func(t1, t2 *TaskStepProfile) bool {
-		return t1.Number < t2.Number
-	}).Sort(profileResult)
-
 	return
 }

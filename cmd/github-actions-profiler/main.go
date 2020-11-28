@@ -19,7 +19,7 @@ func init() {
 	flag.StringVar(&config.Owner, "owner", "", "Repository owner name")
 	flag.StringVar(&config.Repository, "repository", "", "Repository name")
 	flag.StringVar(&config.WorkflowFileName, "workflow_file", "", "Workflow file name")
-	flag.StringVar(&config.AccessToken, "token", "", "Access token. You can pass it with "+accessTokenEnvVariableName+" environment variable")
+	flag.StringVar(&config.AccessToken, "access_token", "", "Access token. You can pass it with "+accessTokenEnvVariableName+" environment variable")
 	flag.IntVar(&config.Count, "count", 20, "Count")
 	flag.StringVar(&config.Format, "format", "table", "Output format. Supported formats are: "+ghaprofiler.AvailableFormats())
 	flag.StringVar(&config.SortBy, "sort", "number", "A filed name to sort by. Supported values are"+ghaprofiler.AvailableSortFieldsForCLI())

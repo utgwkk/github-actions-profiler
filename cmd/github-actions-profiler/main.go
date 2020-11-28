@@ -44,6 +44,10 @@ func main() {
 		config = configFromArgs
 	}
 
+	if configFromArgs.Verbose {
+		config.Verbose = configFromArgs.Verbose
+	}
+
 	if config.Verbose {
 		log.Printf("config=%v\n", configTomlPath)
 		log.Printf("count=%v\n", config.Count)

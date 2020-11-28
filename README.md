@@ -30,7 +30,7 @@ You may pass `access_token` with `GITHUB_ACTIONS_PROFILER_TOKEN` environment var
 
 ### TOML
 
-You may set configuration with a TOML file and pass it with `-config <path to config.toml>`.
+You may set configuration with a TOML file and pass it with `--config <path to config.toml>`.
 
 ```toml
 access_token = "YOUR_ACCESS_TOKEN"

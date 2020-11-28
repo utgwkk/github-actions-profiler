@@ -16,11 +16,11 @@ go get github.com/utgwkk/github-actions-profiler/cmd/github-actions-profiler
 |:-|:-|:-|
 |`access_token`|`string`|An access token|
 |`count`|`int`|Count <!-- TODO: write more detail -->|
-|`format`|`string`|Output format|
+|`format`|`string`|Output format (Supported: `table`, `json`)|
 |`owner`|`string`|Repository owner name|
 |`repository`|`string`|Repository name|
 |`reverse`|`bool`|Reverse the result of sort|
-|`sort`|`string`|A field name to sort by.|
+|`sort`|`string`|A field name to sort by (Supported: `number`, `min`, `max`, `median`, `mean`)|
 |`verbose`|`bool`|Verbose mode|
 |`workflow_file`|`string`|Workflow file name (without `.github/workflows/`)|
 

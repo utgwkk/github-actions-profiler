@@ -50,9 +50,9 @@ func WriteJSON(w io.Writer, profileResult ProfileInput) (err error) {
 func WriteTable(w io.Writer, profileResult ProfileInput) error {
 	for _, p := range profileResult {
 		fmt.Fprintf(w, "Job: %s\n", p.Name)
-		fmt.Fprintln(w, "Number\tMin\tMedian\tMean\tP95\tP99\tMax\tName")
+		fmt.Fprintln(w, "Number\tMin\tMedian\tMean\tP90\tP95\tP99\tMax\tName")
 		for _, p := range p.Profile {
-			fmt.Fprintf(w, "%d\t%f\t%f\t%f\t%f\t%f\t%f\t%s\n", p.Number, p.Min, p.Median, p.Mean, p.Percentile95, p.Percentile99, p.Max, p.Name)
+			fmt.Fprintf(w, "%d\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%s\n", p.Number, p.Min, p.Median, p.Mean, p.Percentile90, p.Percentile95, p.Percentile99, p.Max, p.Name)
 		}
 		fmt.Fprintln(w)
 	}

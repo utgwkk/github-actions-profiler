@@ -46,6 +46,7 @@ func OverrideCLIArgs(tomlConfig *ProfileConfig, cliArgs *ProfileConfigCLIArgs) (
 	} else {
 		newConfig.Repository = tomlConfig.Repository
 	}
+	newConfig.Replace = tomlConfig.Replace
 	if cliArgs.Reverse != nil {
 		newConfig.Reverse = *cliArgs.Reverse
 	} else {

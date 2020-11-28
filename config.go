@@ -9,16 +9,17 @@ import (
 )
 
 type ProfileConfig struct {
-	Owner            string `toml:"owner"`
-	Repository       string `toml:"repository"`
-	WorkflowFileName string `toml:"workflow_file"`
-	Count            int    `toml:"count"`
-	AccessToken      string `toml:"access_token"`
-	Format           string `toml:"format"`
-	SortBy           string `toml:"sort"`
-	Reverse          bool   `toml:"reverse"`
-	Verbose          bool   `toml:"verbose"`
-	JobNameRegexp    string `toml:"job_name_regexp"`
+	Owner            string        `toml:"owner"`
+	Repository       string        `toml:"repository"`
+	WorkflowFileName string        `toml:"workflow_file"`
+	Count            int           `toml:"count"`
+	AccessToken      string        `toml:"access_token"`
+	Format           string        `toml:"format"`
+	SortBy           string        `toml:"sort"`
+	Reverse          bool          `toml:"reverse"`
+	Verbose          bool          `toml:"verbose"`
+	JobNameRegexp    string        `toml:"job_name_regexp"`
+	Replace          []replaceRule `toml:"replace_rule"`
 }
 
 func DefaultProfileConfig() *ProfileConfig {
@@ -66,6 +67,14 @@ func LoadConfigFromTOML(filename string) (*ProfileConfig, error) {
 	err = toml.Unmarshal(p, config)
 	if err != nil {
 		return nil, err
+	}
+
+	for i, rule := range config.Replace {
+		newRule, err := NewReplaceRule(rule.Regexp, rule.Replace)
+		if err != nil {
+			return nil, err
+		}
+		config.Replace[i] = *newRule
 	}
 
 	return config, nil

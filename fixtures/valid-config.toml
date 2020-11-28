@@ -1,0 +1,7 @@
+access_token = "YOUR_ACCESS_TOKEN"
+owner = "utgwkk"
+repository = "Twitter-Text"
+workflow_file = "ci.yml"
+format = "table"
+count = 100
+sort = "number"

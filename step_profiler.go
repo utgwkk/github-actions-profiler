@@ -7,12 +7,16 @@ import (
 )
 
 type TaskStepProfile struct {
-	Name   string  `json:"name"`
-	Number int64   `json:"number"`
-	Min    float64 `json:"min"`
-	Max    float64 `json:"max"`
-	Median float64 `json:"median"`
-	Mean   float64 `json:"mean"`
+	Name         string  `json:"name"`
+	Number       int64   `json:"number"`
+	Min          float64 `json:"min"`
+	Max          float64 `json:"max"`
+	Median       float64 `json:"median"`
+	Mean         float64 `json:"mean"`
+	Percentile50 float64 `json:"50percentile"`
+	Percentile90 float64 `json:"90percentile"`
+	Percentile95 float64 `json:"95percentile"`
+	Percentile99 float64 `json:"99percentile"`
 }
 
 type TaskStepProfileResult = []*TaskStepProfile
@@ -51,14 +55,34 @@ func ProfileTaskStep(steps []*github.TaskStep) (profileResult TaskStepProfileRes
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to calculate mean")
 		}
+		percentile99, err := stats.Percentile(stepElapsed, 99)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to calculate 99%ile")
+		}
+		percentile95, err := stats.Percentile(stepElapsed, 95)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to calculate 95%ile")
+		}
+		percentile90, err := stats.Percentile(stepElapsed, 90)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to calculate 90%ile")
+		}
+		percentile50, err := stats.Percentile(stepElapsed, 50)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to calculate 50%ile")
+		}
 
 		profileResult = append(profileResult, &TaskStepProfile{
-			Name:   *stepName,
-			Number: stepNumber,
-			Min:    min,
-			Max:    max,
-			Median: median,
-			Mean:   mean,
+			Name:         *stepName,
+			Number:       stepNumber,
+			Min:          min,
+			Max:          max,
+			Median:       median,
+			Mean:         mean,
+			Percentile50: percentile50,
+			Percentile90: percentile90,
+			Percentile95: percentile95,
+			Percentile99: percentile99,
 		})
 	}
 

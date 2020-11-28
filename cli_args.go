@@ -5,6 +5,7 @@ type ProfileConfigCLIArgs struct {
 	ConfigPath       *string `long:"config" description:"Path to configuration TOML file"`
 	Count            *int    `long:"count"`
 	Format           *string `long:"format" description:"Output format"`
+	JobNameRegex     *string `long:"job-name-regex" description:"Filter regular expression for a job name"`
 	Owner            *string `long:"owner" description:"Repository owner name"`
 	Repository       *string `long:"repository" description:"Repository name"`
 	Reverse          *bool   `long:"reverse" description:"Reverse the result of sort"`
@@ -29,6 +30,11 @@ func OverrideCLIArgs(tomlConfig *ProfileConfig, cliArgs *ProfileConfigCLIArgs) (
 		newConfig.Format = *cliArgs.Format
 	} else {
 		newConfig.Format = tomlConfig.Format
+	}
+	if cliArgs.JobNameRegex != nil {
+		newConfig.JobNameRegex = *cliArgs.JobNameRegex
+	} else {
+		newConfig.JobNameRegex = tomlConfig.JobNameRegex
 	}
 	if cliArgs.Owner != nil {
 		newConfig.Owner = *cliArgs.Owner

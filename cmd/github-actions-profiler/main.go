@@ -2,59 +2,39 @@ package main
 
 import (
 	"context"
-	"flag"
 	"log"
 	"os"
 
 	"github.com/google/go-github/v32/github"
+	"github.com/jessevdk/go-flags"
 	ghaprofiler "github.com/utgwkk/github-actions-profiler"
 )
 
 var config *ghaprofiler.ProfileConfig = ghaprofiler.DefaultProfileConfig()
-var configFromArgs *ghaprofiler.ProfileConfig = ghaprofiler.DefaultProfileConfig()
-var configTomlPath string
 
 const accessTokenEnvVariableName = "GITHUB_ACTIONS_PROFILER_TOKEN"
 
-func init() {
-	flag.StringVar(&configFromArgs.Owner, "owner", "", "Repository owner name")
-	flag.StringVar(&configFromArgs.Repository, "repository", "", "Repository name")
-	flag.StringVar(&configFromArgs.WorkflowFileName, "workflow_file", "", "Workflow file name")
-	flag.StringVar(&configFromArgs.AccessToken, "access_token", "", "Access token. You can pass it with "+accessTokenEnvVariableName+" environment variable")
-	// XXX: Set default count to 0 but its actually default value is 20
-	flag.IntVar(&configFromArgs.Count, "count", 0, "Count (default 20)")
-	flag.StringVar(&configFromArgs.Format, "format", "table", "Output format. Supported formats are: "+ghaprofiler.AvailableFormatsForCLI())
-	flag.StringVar(&configFromArgs.SortBy, "sort", "number", "A field name to sort by. Supported values are: "+ghaprofiler.AvailableSortFieldsForCLI())
-	flag.BoolVar(&configFromArgs.Reverse, "reverse", false, "Reverse the result of sort")
-	flag.BoolVar(&configFromArgs.Verbose, "verbose", false, "Verbose mode")
-	flag.StringVar(&configTomlPath, "config", "", "Path to configuration TOML file. Note that settings in command-line arguments are overwritten with TOML")
-}
-
 func main() {
 	ctx := context.Background()
-	flag.Parse()
 
-	if configTomlPath != "" {
+	var configFromArgs ghaprofiler.ProfileConfigCLIArgs
+	args := os.Args[1:]
+	args, err := flags.ParseArgs(&configFromArgs, args)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var configTomlPath string
+	if configFromArgs.ConfigPath != nil {
+		configTomlPath = *configFromArgs.ConfigPath
 		configFromTOML, err := ghaprofiler.LoadConfigFromTOML(configTomlPath)
 		if err != nil {
 			log.Fatalf("Failed to load %s: %v", configTomlPath, err)
 		}
 		// TODO: Override config with CLI arguments when they are given
-		config = configFromTOML
+		config = ghaprofiler.OverrideCLIArgs(configFromTOML, &configFromArgs)
 	} else {
-		config = configFromArgs
-	}
-
-	// Override some settings
-	if configFromArgs.Count > 0 {
-		config.Count = configFromArgs.Count
-	}
-	if config.Count == 0 {
-		config.Count = 20
-	}
-
-	if configFromArgs.Verbose {
-		config.Verbose = configFromArgs.Verbose
+		config = ghaprofiler.OverrideCLIArgs(ghaprofiler.DefaultProfileConfig(), &configFromArgs)
 	}
 
 	if config.Verbose {

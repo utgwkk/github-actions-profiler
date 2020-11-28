@@ -12,8 +12,13 @@ const (
 	formatNameTable = "table"
 )
 
-func AvailableFormats() string {
-	return strings.Join([]string{formatNameJSON, formatNameTable}, ", ")
+var availableFormats = []string{
+	formatNameJSON,
+	formatNameTable,
+}
+
+func AvailableFormatsForCLI() string {
+	return strings.Join(availableFormats, ", ")
 }
 
 type ProfileForFormatter struct {
@@ -24,11 +29,10 @@ type ProfileForFormatter struct {
 type ProfileInput []*ProfileForFormatter
 
 func IsValidFormatName(formatName string) bool {
-	if formatName == formatNameJSON {
-		return true
-	}
-	if formatName == formatNameTable {
-		return true
+	for _, available := range availableFormats {
+		if formatName == available {
+			return true
+		}
 	}
 	return false
 }

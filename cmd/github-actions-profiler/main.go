@@ -22,7 +22,7 @@ func init() {
 	flag.StringVar(&configFromArgs.WorkflowFileName, "workflow_file", "", "Workflow file name")
 	flag.StringVar(&configFromArgs.AccessToken, "access_token", "", "Access token. You can pass it with "+accessTokenEnvVariableName+" environment variable")
 	flag.IntVar(&configFromArgs.Count, "count", 20, "Count")
-	flag.StringVar(&configFromArgs.Format, "format", "table", "Output format. Supported formats are: "+ghaprofiler.AvailableFormats())
+	flag.StringVar(&configFromArgs.Format, "format", "table", "Output format. Supported formats are: "+ghaprofiler.AvailableFormatsForCLI())
 	flag.StringVar(&configFromArgs.SortBy, "sort", "number", "A filed name to sort by. Supported values are"+ghaprofiler.AvailableSortFieldsForCLI())
 	flag.BoolVar(&configFromArgs.Reverse, "reverse", false, "Reverse the result of sort")
 	flag.BoolVar(&configFromArgs.Verbose, "verbose", false, "Verbose mode")

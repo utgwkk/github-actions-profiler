@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"os"
+	"sort"
 
 	"github.com/google/go-github/v32/github"
 	"github.com/jessevdk/go-flags"
@@ -135,8 +136,15 @@ func main() {
 		}
 	}
 
+	var formatterInputJobNames []string
+	for k := range profileResult {
+		formatterInputJobNames = append(formatterInputJobNames, k)
+	}
+	sort.Strings(formatterInputJobNames)
+
 	var profileFormatterInput ghaprofiler.ProfileInput
-	for jobName, result := range profileResult {
+	for _, jobName := range formatterInputJobNames {
+		result := profileResult[jobName]
 		profileFormatterInput = append(profileFormatterInput, &ghaprofiler.ProfileForFormatter{
 			Name:    jobName,
 			Profile: result,

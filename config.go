@@ -65,3 +65,15 @@ func LoadConfigFromTOML(filename string) (*ProfileConfig, error) {
 
 	return config, nil
 }
+
+func (dst *ProfileConfig) OverrideConfig(src *ProfileConfig) {
+	dst.AccessToken = src.AccessToken
+	dst.Count = src.Count
+	dst.Format = src.Format
+	dst.Owner = src.Owner
+	dst.Repository = src.Repository
+	dst.Reverse = src.Reverse
+	dst.SortBy = src.SortBy
+	dst.Verbose = src.Verbose
+	dst.WorkflowFileName = src.WorkflowFileName
+}

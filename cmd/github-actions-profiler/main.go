@@ -11,20 +11,21 @@ import (
 )
 
 var config *ghaprofiler.ProfileConfig = ghaprofiler.DefaultProfileConfig()
+var configFromArgs *ghaprofiler.ProfileConfig = ghaprofiler.DefaultProfileConfig()
 var configTomlPath string
 
 const accessTokenEnvVariableName = "GITHUB_ACTIONS_PROFILER_TOKEN"
 
 func init() {
-	flag.StringVar(&config.Owner, "owner", "", "Repository owner name")
-	flag.StringVar(&config.Repository, "repository", "", "Repository name")
-	flag.StringVar(&config.WorkflowFileName, "workflow_file", "", "Workflow file name")
-	flag.StringVar(&config.AccessToken, "access_token", "", "Access token. You can pass it with "+accessTokenEnvVariableName+" environment variable")
-	flag.IntVar(&config.Count, "count", 20, "Count")
-	flag.StringVar(&config.Format, "format", "table", "Output format. Supported formats are: "+ghaprofiler.AvailableFormats())
-	flag.StringVar(&config.SortBy, "sort", "number", "A filed name to sort by. Supported values are"+ghaprofiler.AvailableSortFieldsForCLI())
-	flag.BoolVar(&config.Reverse, "reverse", false, "Reverse the result of sort")
-	flag.BoolVar(&config.Verbose, "verbose", false, "Verbose mode")
+	flag.StringVar(&configFromArgs.Owner, "owner", "", "Repository owner name")
+	flag.StringVar(&configFromArgs.Repository, "repository", "", "Repository name")
+	flag.StringVar(&configFromArgs.WorkflowFileName, "workflow_file", "", "Workflow file name")
+	flag.StringVar(&configFromArgs.AccessToken, "access_token", "", "Access token. You can pass it with "+accessTokenEnvVariableName+" environment variable")
+	flag.IntVar(&configFromArgs.Count, "count", 20, "Count")
+	flag.StringVar(&configFromArgs.Format, "format", "table", "Output format. Supported formats are: "+ghaprofiler.AvailableFormats())
+	flag.StringVar(&configFromArgs.SortBy, "sort", "number", "A filed name to sort by. Supported values are"+ghaprofiler.AvailableSortFieldsForCLI())
+	flag.BoolVar(&configFromArgs.Reverse, "reverse", false, "Reverse the result of sort")
+	flag.BoolVar(&configFromArgs.Verbose, "verbose", false, "Verbose mode")
 	flag.StringVar(&configTomlPath, "config", "", "Path to configuration TOML file. Note that settings in TOML are overwritten with command-line arguments")
 }
 
@@ -33,16 +34,18 @@ func main() {
 	flag.Parse()
 
 	if configTomlPath != "" {
-		var err error
-		config, err = ghaprofiler.LoadConfigFromTOML(configTomlPath)
+		configFromTOML, err := ghaprofiler.LoadConfigFromTOML(configTomlPath)
 		if err != nil {
 			log.Fatalf("Failed to load %s: %v", configTomlPath, err)
 		}
-		// XXX: Override config with command-line arguments...
-		flag.Parse()
+		configFromTOML.OverrideConfig(configFromArgs)
+		config = configFromTOML
+	} else {
+		config = configFromArgs
 	}
 
 	if config.Verbose {
+		log.Printf("config=%v\n", configTomlPath)
 		log.Printf("count=%v\n", config.Count)
 		log.Printf("format=%v\n", config.Format)
 		log.Printf("owner=%v\n", config.Owner)

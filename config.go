@@ -9,7 +9,7 @@ import (
 
 type ProfileConfig struct {
 	Owner            string `toml:"owner"`
-	Repository       string `toml:"repo"`
+	Repository       string `toml:"repository"`
 	WorkflowFileName string `toml:"workflow_file"`
 	Count            int    `toml:"count"`
 	AccessToken      string `toml:"access_token"`

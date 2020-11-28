@@ -17,7 +17,7 @@ const accessTokenEnvVariableName = "GITHUB_ACTIONS_PROFILER_TOKEN"
 
 func init() {
 	flag.StringVar(&config.Owner, "owner", "", "Repository owner name")
-	flag.StringVar(&config.Repository, "repo", "", "Repository name")
+	flag.StringVar(&config.Repository, "repository", "", "Repository name")
 	flag.StringVar(&config.WorkflowFileName, "workflow_file", "", "Workflow file name")
 	flag.StringVar(&config.AccessToken, "token", "", "Access token. You can pass it with "+accessTokenEnvVariableName+" environment variable")
 	flag.IntVar(&config.Count, "count", 20, "Count")

@@ -1,7 +1,10 @@
-access_token = "YOUR_ACCESS_TOKEN"
+access-token = "YOUR_ACCESS_TOKEN"
+cache = true
+cache-directory = "/tmp/cache"
 owner = "utgwkk"
 repository = "Twitter-Text"
-workflow_file = "ci.yml"
+workflow-file = "ci.yml"
 format = "table"
 count = 100
 sort = "number"
+concurrency = 2

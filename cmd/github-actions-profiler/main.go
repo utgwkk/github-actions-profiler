@@ -51,10 +51,10 @@ func main() {
 		log.Printf("reverse=%v\n", config.Reverse)
 		log.Printf("sort=%v\n", config.SortBy)
 		// We don't write out token
-		log.Printf("workflow_file=%v\n", config.WorkflowFileName)
+		log.Printf("workflow-file=%v\n", config.WorkflowFileName)
 		log.Printf("replace=%#v", config.Replace)
 		log.Printf("cache=%v", config.Cache)
-		log.Printf("cache_directory=%v", config.CacheDirectory)
+		log.Printf("cache-directory=%v", config.CacheDirectory)
 	}
 
 	if err := config.Validate(); err != nil {

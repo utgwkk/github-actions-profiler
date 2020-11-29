@@ -13,17 +13,17 @@ import (
 type ProfileConfig struct {
 	Owner            string        `toml:"owner"`
 	Repository       string        `toml:"repository"`
-	WorkflowFileName string        `toml:"workflow_file"`
+	WorkflowFileName string        `toml:"workflow-file"`
 	Cache            bool          `toml:"cache"`
-	CacheDirectory   string        `toml:"cache_directory"`
+	CacheDirectory   string        `toml:"cache-directory"`
 	Concurrency      int           `toml:"concurrency"`
 	Count            int           `toml:"count"`
-	AccessToken      string        `toml:"access_token"`
+	AccessToken      string        `toml:"access-token"`
 	Format           string        `toml:"format"`
 	SortBy           string        `toml:"sort"`
 	Reverse          bool          `toml:"reverse"`
 	Verbose          bool          `toml:"verbose"`
-	JobNameRegexp    string        `toml:"job_name_regexp"`
+	JobNameRegexp    string        `toml:"job-name-regexp"`
 	Replace          []replaceRule `toml:"replace_rule"`
 }
 

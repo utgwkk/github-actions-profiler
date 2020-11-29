@@ -8,7 +8,7 @@ type ProfileConfigCLIArgs struct {
 	CacheDirectory   *string `long:"cache-dir" description:"Where to store cache data"`
 	Concurrency      *int    `long:"concurrency" short:"j" description:"Concurrency of GitHub API client" default-mask:"2"`
 	ConfigPath       *string `long:"config" description:"Path to configuration TOML file"`
-	Count            *int    `long:"count" short:"c" description:"Count" default-mask:"20"`
+	NumberOfJob      *int    `long:"number-of-job" short:"n" description:"The number of job to analyze" default-mask:"20"`
 	Format           *string `long:"format" short:"f" description:"Output format" default-mask:"table" choice:"table" choice:"json" choice:"tsv" choice:"markdown"`
 	JobNameRegexp    *string `long:"job-name-regexp" description:"Filter regular expression for a job name"`
 	Owner            *string `long:"owner" description:"Repository owner name"`
@@ -41,10 +41,10 @@ func OverrideCLIArgs(tomlConfig *ProfileConfig, cliArgs *ProfileConfigCLIArgs) (
 	} else {
 		newConfig.Concurrency = tomlConfig.Concurrency
 	}
-	if cliArgs.Count != nil {
-		newConfig.Count = *cliArgs.Count
+	if cliArgs.NumberOfJob != nil {
+		newConfig.NumberOfJob = *cliArgs.NumberOfJob
 	} else {
-		newConfig.Count = tomlConfig.Count
+		newConfig.NumberOfJob = tomlConfig.NumberOfJob
 	}
 	if cliArgs.Format != nil {
 		newConfig.Format = *cliArgs.Format

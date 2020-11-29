@@ -69,7 +69,7 @@ func main() {
 
 	listWorkflowRunsOpts := &github.ListWorkflowRunsOptions{
 		ListOptions: github.ListOptions{
-			PerPage: config.Count,
+			PerPage: config.NumberOfJob,
 		},
 	}
 

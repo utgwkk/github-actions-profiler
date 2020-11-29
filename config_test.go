@@ -23,7 +23,7 @@ func Test_LoadFromTOML(t *testing.T) {
 		Concurrency:      2,
 		Cache:            true,
 		CacheDirectory:   "/tmp/cache",
-		Count:            100,
+		NumberOfJob:      100,
 		Format:           "table",
 		Owner:            "utgwkk",
 		Repository:       "Twitter-Text",

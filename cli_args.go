@@ -2,8 +2,8 @@ package ghaprofiler
 
 type ProfileConfigCLIArgs struct {
 	AccessToken      *string `long:"access_token"`
-	Cache            *bool   `long:"cache"`
-	CacheDirectory   *string `long:"cache-dir"`
+	Cache            *bool   `long:"cache" description:"Enable disk cache (default: true)"`
+	CacheDirectory   *string `long:"cache-dir" description:"Where to store cache data"`
 	ConfigPath       *string `long:"config" description:"Path to configuration TOML file"`
 	Count            *int    `long:"count"`
 	Format           *string `long:"format" description:"Output format"`

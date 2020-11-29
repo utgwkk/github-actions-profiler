@@ -15,6 +15,8 @@ go get github.com/utgwkk/github-actions-profiler/cmd/github-actions-profiler
 |arguments|type|description|
 |:-|:-|:-|
 |`access_token`|`string`|An access token|
+|`cache`|`bool`|Enable disk cache (default: `true`)|
+|`cache-dir`|`string`|Where to store cache data|
 |`count`|`int`|Count <!-- TODO: write more detail -->|
 |`format`|`string`|Output format (Supported: `table`, `json`)|
 |`job-name-regexp`|`string`|Filter regular expression for a job name|
@@ -35,6 +37,8 @@ You may set configuration with a TOML file and pass it with `--config <path to c
 
 ```toml
 access_token = "YOUR_ACCESS_TOKEN"
+cache = true
+cache_dir = "/tmp/cache/dir"
 count = 50
 format = "table"
 job_name_regexp = "Perl"

@@ -1,5 +1,7 @@
 package ghaprofiler
 
+// ProfileConfigCLIArgs is a set of option from command-line arguments
+// see DefaultProfileConfig() in config.go for more details
 type ProfileConfigCLIArgs struct {
 	AccessToken      *string `long:"access_token"`
 	Cache            *bool   `long:"cache" description:"Enable disk cache (default: true)"`

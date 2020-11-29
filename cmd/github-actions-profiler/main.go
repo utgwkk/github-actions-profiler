@@ -43,6 +43,7 @@ func main() {
 
 	if config.Verbose {
 		log.Printf("config=%v\n", configTomlPath)
+		log.Printf("concurrency=%v\n", config.Concurrency)
 		log.Printf("count=%v\n", config.Count)
 		log.Printf("format=%v\n", config.Format)
 		log.Printf("job-name-regexp=%v\n", config.JobNameRegexp)
@@ -98,8 +99,7 @@ func main() {
 
 	jobsByJobName := NewJobsByJobNameMap()
 	eg := new(errgroup.Group)
-	// TODO: make configurable
-	sem := make(chan struct{}, 4)
+	sem := make(chan struct{}, config.Concurrency)
 
 	for _, run := range workflowRuns.WorkflowRuns {
 		sem <- struct{}{}

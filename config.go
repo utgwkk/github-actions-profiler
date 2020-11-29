@@ -16,6 +16,7 @@ type ProfileConfig struct {
 	WorkflowFileName string        `toml:"workflow_file"`
 	Cache            bool          `toml:"cache"`
 	CacheDirectory   string        `toml:"cache_directory"`
+	Concurrency      int           `toml:"concurrency"`
 	Count            int           `toml:"count"`
 	AccessToken      string        `toml:"access_token"`
 	Format           string        `toml:"format"`
@@ -40,6 +41,7 @@ func defaultCacheDirectoryPath() string {
 
 func DefaultProfileConfig() *ProfileConfig {
 	return &ProfileConfig{
+		Concurrency:    2,
 		Count:          20,
 		Cache:          true,
 		CacheDirectory: defaultCacheDirectoryPath(),
@@ -57,6 +59,9 @@ func (config ProfileConfig) Validate() error {
 	}
 	if config.WorkflowFileName == "" {
 		return fmt.Errorf("Workflow file name required")
+	}
+	if config.Concurrency <= 0 {
+		return fmt.Errorf("Concurrency must be a positive integer")
 	}
 	if config.Count <= 0 {
 		return fmt.Errorf("Count must be a positive integer")

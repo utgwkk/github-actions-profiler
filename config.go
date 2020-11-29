@@ -3,6 +3,8 @@ package ghaprofiler
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
+	"path"
 	"regexp"
 
 	"github.com/pelletier/go-toml"
@@ -12,6 +14,8 @@ type ProfileConfig struct {
 	Owner            string        `toml:"owner"`
 	Repository       string        `toml:"repository"`
 	WorkflowFileName string        `toml:"workflow_file"`
+	Cache            bool          `toml:"cache"`
+	CacheDirectory   string        `toml:"cache_directory"`
 	Count            int           `toml:"count"`
 	AccessToken      string        `toml:"access_token"`
 	Format           string        `toml:"format"`
@@ -22,11 +26,25 @@ type ProfileConfig struct {
 	Replace          []replaceRule `toml:"replace_rule"`
 }
 
+var defaultCacheDirectoryName = "github-actions-profiler-httpcache"
+
+func defaultCacheDirectoryPath() string {
+	userCacheDir, err := os.UserCacheDir()
+	if err == nil {
+		return path.Join(userCacheDir, defaultCacheDirectoryName)
+	}
+
+	// fallback to temporary directory
+	return path.Join(os.TempDir(), defaultCacheDirectoryName)
+}
+
 func DefaultProfileConfig() *ProfileConfig {
 	return &ProfileConfig{
-		Count:  20,
-		Format: "table",
-		SortBy: "number",
+		Count:          20,
+		Cache:          true,
+		CacheDirectory: defaultCacheDirectoryPath(),
+		Format:         "table",
+		SortBy:         "number",
 	}
 }
 
@@ -57,7 +75,7 @@ func (config ProfileConfig) Validate() error {
 }
 
 func LoadConfigFromTOML(filename string) (*ProfileConfig, error) {
-	config := &ProfileConfig{}
+	config := DefaultProfileConfig()
 
 	p, err := ioutil.ReadFile(filename)
 	if err != nil {

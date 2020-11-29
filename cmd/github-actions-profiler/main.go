@@ -52,6 +52,8 @@ func main() {
 		// We don't write out token
 		log.Printf("workflow_file=%v\n", config.WorkflowFileName)
 		log.Printf("replace=%#v", config.Replace)
+		log.Printf("cache=%v", config.Cache)
+		log.Printf("cache_directory=%v", config.CacheDirectory)
 	}
 
 	if err := config.Validate(); err != nil {
@@ -71,7 +73,9 @@ func main() {
 	}
 
 	client := ghaprofiler.NewClientWithConfig(ctx, &ghaprofiler.ClientConfig{
-		AccessToken: config.AccessToken,
+		AccessToken:    config.AccessToken,
+		Cache:          config.Cache,
+		CacheDirectory: config.CacheDirectory,
 	})
 
 	listWorkflowRunsOpts := &github.ListWorkflowRunsOptions{

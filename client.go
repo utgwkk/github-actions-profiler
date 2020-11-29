@@ -15,8 +15,9 @@ type Client struct {
 }
 
 type ClientConfig struct {
-	AccessToken string
-	Cache       bool
+	AccessToken    string
+	Cache          bool
+	CacheDirectory string
 }
 
 func NewClientWithConfig(ctx context.Context, config *ClientConfig) *Client {
@@ -31,8 +32,7 @@ func NewClientWithConfig(ctx context.Context, config *ClientConfig) *Client {
 	var cacheTransport *httpcache.Transport
 	var oauth2Client *http.Client
 	if config.Cache {
-		// TODO: make configurable
-		diskCache := diskcache.New("/tmp/github-actions-profiler-cache")
+		diskCache := diskcache.New(config.CacheDirectory)
 		cacheTransport = httpcache.NewTransport(diskCache)
 	}
 

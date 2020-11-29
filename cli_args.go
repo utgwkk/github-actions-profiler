@@ -2,6 +2,8 @@ package ghaprofiler
 
 type ProfileConfigCLIArgs struct {
 	AccessToken      *string `long:"access_token"`
+	Cache            *bool   `long:"cache"`
+	CacheDirectory   *string `log:"cache-dir"`
 	ConfigPath       *string `long:"config" description:"Path to configuration TOML file"`
 	Count            *int    `long:"count"`
 	Format           *string `long:"format" description:"Output format"`
@@ -20,6 +22,16 @@ func OverrideCLIArgs(tomlConfig *ProfileConfig, cliArgs *ProfileConfigCLIArgs) (
 		newConfig.AccessToken = *cliArgs.AccessToken
 	} else {
 		newConfig.AccessToken = tomlConfig.AccessToken
+	}
+	if cliArgs.Cache != nil {
+		newConfig.Cache = *cliArgs.Cache
+	} else {
+		newConfig.Cache = tomlConfig.Cache
+	}
+	if cliArgs.CacheDirectory != nil {
+		newConfig.CacheDirectory = *cliArgs.CacheDirectory
+	} else {
+		newConfig.CacheDirectory = tomlConfig.CacheDirectory
 	}
 	if cliArgs.Count != nil {
 		newConfig.Count = *cliArgs.Count

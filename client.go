@@ -2,8 +2,11 @@ package ghaprofiler
 
 import (
 	"context"
+	"net/http"
 
 	"github.com/google/go-github/v32/github"
+	"github.com/gregjones/httpcache"
+	"github.com/gregjones/httpcache/diskcache"
 	"golang.org/x/oauth2"
 )
 
@@ -12,7 +15,9 @@ type Client struct {
 }
 
 type ClientConfig struct {
-	AccessToken string
+	AccessToken    string
+	Cache          bool
+	CacheDirectory string
 }
 
 func NewClientWithConfig(ctx context.Context, config *ClientConfig) *Client {
@@ -24,12 +29,33 @@ func NewClientWithConfig(ctx context.Context, config *ClientConfig) *Client {
 		return client
 	}
 
+	var cacheTransport *httpcache.Transport
+	var oauth2Client *http.Client
+	if config.Cache {
+		diskCache := diskcache.New(config.CacheDirectory)
+		cacheTransport = httpcache.NewTransport(diskCache)
+	}
+
 	if config.AccessToken != "" {
 		ts := oauth2.StaticTokenSource(
 			&oauth2.Token{AccessToken: config.AccessToken},
 		)
-		tc := oauth2.NewClient(ctx, ts)
-		client.githubClient = github.NewClient(tc)
+		oauth2Client = oauth2.NewClient(ctx, ts)
+	}
+
+	if oauth2Client != nil {
+		if cacheTransport != nil {
+			cacheTransport.Transport = oauth2Client.Transport
+			client.githubClient = github.NewClient(cacheTransport.Client())
+		} else {
+			client.githubClient = github.NewClient(oauth2Client)
+		}
+	} else {
+		if cacheTransport != nil {
+			client.githubClient = github.NewClient(cacheTransport.Client())
+		} else {
+			client.githubClient = github.NewClient(nil)
+		}
 	}
 
 	return client

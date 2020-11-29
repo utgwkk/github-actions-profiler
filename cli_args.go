@@ -6,15 +6,15 @@ type ProfileConfigCLIArgs struct {
 	AccessToken      *string `long:"access_token" description:"Access token for GitHub"`
 	Cache            *bool   `long:"cache" description:"Enable disk cache" default-mask:"true"`
 	CacheDirectory   *string `long:"cache-dir" description:"Where to store cache data"`
-	Concurrency      *int    `long:"concurrency" description:"Concurrency of GitHub API client" default-mask:"2"`
+	Concurrency      *int    `long:"concurrency" short:"j" description:"Concurrency of GitHub API client" default-mask:"2"`
 	ConfigPath       *string `long:"config" description:"Path to configuration TOML file"`
-	Count            *int    `long:"count" description:"Count" default-mask:"20"`
-	Format           *string `long:"format" description:"Output format" default-mask:"table" choice:"table" choice:"json"`
+	Count            *int    `long:"count" short:"c" description:"Count" default-mask:"20"`
+	Format           *string `long:"format" short:"f" description:"Output format" default-mask:"table" choice:"table" choice:"json"`
 	JobNameRegexp    *string `long:"job-name-regexp" description:"Filter regular expression for a job name"`
 	Owner            *string `long:"owner" description:"Repository owner name"`
 	Repository       *string `long:"repository" description:"Repository name"`
-	Reverse          *bool   `long:"reverse" description:"Reverse the result of sort" default-mask:"false"`
-	SortBy           *string `long:"sort" description:"A field name to sort by" default-mask:"number"`
+	Reverse          *bool   `long:"reverse" short:"r" description:"Reverse the result of sort" default-mask:"false"`
+	SortBy           *string `long:"sort" short:"s" description:"A field name to sort by" default-mask:"number"`
 	Verbose          *bool   `long:"verbose" description:"Verbose mode"`
 	WorkflowFileName *string `long:"workflow_file" description:"Workflow file name"`
 }

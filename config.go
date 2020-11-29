@@ -105,3 +105,21 @@ func LoadConfigFromTOML(filename string) (*ProfileConfig, error) {
 
 	return config, nil
 }
+
+func (c ProfileConfig) Dump() string {
+	var dump string
+	dump += fmt.Sprintf("concurrency=%v\n", c.Concurrency)
+	dump += fmt.Sprintf("count=%v\n", c.Count)
+	dump += fmt.Sprintf("format=%v\n", c.Format)
+	dump += fmt.Sprintf("job-name-regexp=%v\n", c.JobNameRegexp)
+	dump += fmt.Sprintf("owner=%v\n", c.Owner)
+	dump += fmt.Sprintf("repo=%v\n", c.Repository)
+	dump += fmt.Sprintf("reverse=%v\n", c.Reverse)
+	dump += fmt.Sprintf("sort=%v\n", c.SortBy)
+	// We don't write out token
+	dump += fmt.Sprintf("workflow-file=%v\n", c.WorkflowFileName)
+	dump += fmt.Sprintf("replace=%#v\n", c.Replace)
+	dump += fmt.Sprintf("cache=%v\n", c.Cache)
+	dump += fmt.Sprintf("cache-directory=%v\n", c.CacheDirectory)
+	return dump
+}

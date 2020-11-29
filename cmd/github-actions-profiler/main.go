@@ -41,20 +41,8 @@ func main() {
 	}
 
 	if config.Verbose {
-		log.Printf("config=%v\n", configTomlPath)
-		log.Printf("concurrency=%v\n", config.Concurrency)
-		log.Printf("count=%v\n", config.Count)
-		log.Printf("format=%v\n", config.Format)
-		log.Printf("job-name-regexp=%v\n", config.JobNameRegexp)
-		log.Printf("owner=%v\n", config.Owner)
-		log.Printf("repo=%v\n", config.Repository)
-		log.Printf("reverse=%v\n", config.Reverse)
-		log.Printf("sort=%v\n", config.SortBy)
-		// We don't write out token
-		log.Printf("workflow-file=%v\n", config.WorkflowFileName)
-		log.Printf("replace=%#v", config.Replace)
-		log.Printf("cache=%v", config.Cache)
-		log.Printf("cache-directory=%v", config.CacheDirectory)
+		log.Printf("config=%v", configTomlPath)
+		log.Print(config.Dump())
 	}
 
 	if err := config.Validate(); err != nil {

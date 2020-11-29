@@ -51,6 +51,7 @@ func main() {
 		log.Printf("sort=%v\n", config.SortBy)
 		// We don't write out token
 		log.Printf("workflow_file=%v\n", config.WorkflowFileName)
+		log.Printf("replace=%#v", config.Replace)
 	}
 
 	if err := config.Validate(); err != nil {
@@ -105,10 +106,20 @@ func main() {
 		}
 
 		for _, job := range jobs.Jobs {
-			if !jobNameRegex.MatchString(*job.Name) {
+			jobName := *job.Name
+			if !jobNameRegex.MatchString(jobName) {
 				continue
 			}
-			jobsByJobName[*job.Name] = append(jobsByJobName[*job.Name], job)
+			if config.Verbose {
+				log.Printf("Job name (before replacement): %#v", jobName)
+			}
+			for _, rule := range config.Replace {
+				jobName = rule.Apply(jobName)
+			}
+			if config.Verbose {
+				log.Printf("Job name (after replacement): %#v", jobName)
+			}
+			jobsByJobName[jobName] = append(jobsByJobName[jobName], job)
 		}
 	}
 

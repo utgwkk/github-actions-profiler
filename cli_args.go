@@ -8,7 +8,7 @@ type ProfileConfigCLIArgs struct {
 	CacheDirectory   *string `long:"cache-dir" description:"Where to store cache data"`
 	Concurrency      *int    `long:"concurrency" description:"Concurrency of GitHub API client" default-mask:"2"`
 	ConfigPath       *string `long:"config" description:"Path to configuration TOML file"`
-	Count            *int    `long:"count" default-mask:"20"`
+	Count            *int    `long:"count" description:"Count" default-mask:"20"`
 	Format           *string `long:"format" description:"Output format" default-mask:"table" choice:"table" choice:"json"`
 	JobNameRegexp    *string `long:"job-name-regexp" description:"Filter regular expression for a job name"`
 	Owner            *string `long:"owner" description:"Repository owner name"`

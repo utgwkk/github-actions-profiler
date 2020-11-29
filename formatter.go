@@ -11,13 +11,15 @@ import (
 )
 
 const (
-	formatNameJSON  = "json"
-	formatNameTable = "table"
-	formatNameTSV   = "tsv"
+	formatNameJSON     = "json"
+	formatNameMarkdown = "markdown"
+	formatNameTable    = "table"
+	formatNameTSV      = "tsv"
 )
 
 var availableFormats = []string{
 	formatNameJSON,
+	formatNameMarkdown,
 	formatNameTable,
 	formatNameTSV,
 }
@@ -52,10 +54,14 @@ func WriteJSON(w io.Writer, profileResult ProfileInput) (err error) {
 	return
 }
 
-func WriteTable(w io.Writer, profileResult ProfileInput) error {
+func WriteTable(w io.Writer, profileResult ProfileInput, markdown bool) error {
 	for _, p := range profileResult {
 		table := tablewriter.NewWriter(w)
 		table.SetAutoFormatHeaders(false)
+		if markdown {
+			table.SetBorders(tablewriter.Border{Left: true, Top: false, Right: true, Bottom: false})
+			table.SetCenterSeparator("|")
+		}
 		table.SetHeader([]string{"Number", "Min", "Median", "Mean", "P50", "P90", "P95", "P99", "Max", "Name"})
 		for _, p := range p.Profile {
 			table.Append([]string{
@@ -71,7 +77,12 @@ func WriteTable(w io.Writer, profileResult ProfileInput) error {
 				p.Name,
 			})
 		}
-		fmt.Fprintf(w, "Job: %s\n", p.Name)
+		if markdown {
+			fmt.Fprintf(w, "# Job: %s\n", p.Name)
+			fmt.Fprintln(w)
+		} else {
+			fmt.Fprintf(w, "Job: %s\n", p.Name)
+		}
 		table.Render()
 		fmt.Fprintln(w)
 	}
@@ -96,7 +107,10 @@ func WriteWithFormat(w io.Writer, profileResult ProfileInput, format string) err
 		WriteJSON(w, profileResult)
 		break
 	case formatNameTable:
-		WriteTable(w, profileResult)
+		WriteTable(w, profileResult, false)
+		break
+	case formatNameMarkdown:
+		WriteTable(w, profileResult, true)
 		break
 	case formatNameTSV:
 		WriteTSV(w, profileResult)

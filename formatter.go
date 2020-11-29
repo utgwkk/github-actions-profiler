@@ -61,6 +61,7 @@ func WriteTable(w io.Writer, profileResult ProfileInput, markdown bool) error {
 		if markdown {
 			table.SetBorders(tablewriter.Border{Left: true, Top: false, Right: true, Bottom: false})
 			table.SetCenterSeparator("|")
+			table.SetAutoWrapText(false)
 		}
 		table.SetHeader([]string{"Number", "Min", "Median", "Mean", "P50", "P90", "P95", "P99", "Max", "Name"})
 		for _, p := range p.Profile {

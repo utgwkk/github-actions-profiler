@@ -3,7 +3,7 @@ package ghaprofiler
 // ProfileConfigCLIArgs is a set of option from command-line arguments
 // see DefaultProfileConfig() in config.go for more details
 type ProfileConfigCLIArgs struct {
-	AccessToken      *string `long:"access_token"`
+	AccessToken      *string `long:"access_token" description:"Access token for GitHub"`
 	Cache            *bool   `long:"cache" description:"Enable disk cache" default-mask:"true"`
 	CacheDirectory   *string `long:"cache-dir" description:"Where to store cache data"`
 	Concurrency      *int    `long:"concurrency" description:"Concurrency of GitHub API client" default-mask:"2"`

@@ -14,7 +14,7 @@ go get github.com/utgwkk/github-actions-profiler/cmd/github-actions-profiler
 
 |arguments|type|description|
 |:-|:-|:-|
-|`access_token`|`string`|An access token|
+|`access-token`|`string`|An access token|
 |`cache`|`bool`|Enable disk cache (Default: `true`)|
 |`cache-dir`|`string`|Where to store cache data|
 |`concurrency`|`int`|Concurrency of GitHub API client (Default: 2)|
@@ -26,28 +26,28 @@ go get github.com/utgwkk/github-actions-profiler/cmd/github-actions-profiler
 |`reverse`|`bool`|Reverse the result of sort|
 |`sort`|`string`|A field name to sort by (Default: `number`, Supported: `number`, `min`, `max`, `median`, `mean`, `p50`, `p90`, `p95`, `p99`)|
 |`verbose`|`bool`|Verbose mode|
-|`workflow_file`|`string`|Workflow file name (without `.github/workflows/`)|
+|`workflow-file`|`string`|Workflow file name (without `.github/workflows/`)|
 
 ### Passing access token with a environment variable
 
-You may pass `access_token` with `GITHUB_ACTIONS_PROFILER_TOKEN` environment variable.
+You may pass `access-token` with `GITHUB_ACTIONS_PROFILER_TOKEN` environment variable.
 
 ### TOML
 
 You may set configuration with a TOML file and pass it with `--config <path to config.toml>`.
 
 ```toml
-access_token = "YOUR_ACCESS_TOKEN"
+access-token = "YOUR_ACCESS_TOKEN"
 cache = true
-cache_dir = "/tmp/cache/dir"
+cache-dir = "/tmp/cache/dir"
 count = 50
 format = "table"
-job_name_regexp = "Perl"
+job-name-regexp = "Perl"
 owner = "your-name"
 repository = "your-repository"
 reverse = true
 sort = "max"
-workflow_file = "ci.yml"
+workflow-file = "ci.yml"
 ```
 
 ## Example output

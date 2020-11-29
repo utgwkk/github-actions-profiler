@@ -3,7 +3,7 @@ package ghaprofiler
 // ProfileConfigCLIArgs is a set of option from command-line arguments
 // see DefaultProfileConfig() in config.go for more details
 type ProfileConfigCLIArgs struct {
-	AccessToken      *string `long:"access_token" description:"Access token for GitHub"`
+	AccessToken      *string `long:"access-token" description:"Access token for GitHub"`
 	Cache            *bool   `long:"cache" description:"Enable disk cache" default-mask:"true"`
 	CacheDirectory   *string `long:"cache-dir" description:"Where to store cache data"`
 	Concurrency      *int    `long:"concurrency" short:"j" description:"Concurrency of GitHub API client" default-mask:"2"`
@@ -16,7 +16,7 @@ type ProfileConfigCLIArgs struct {
 	Reverse          *bool   `long:"reverse" short:"r" description:"Reverse the result of sort" default-mask:"false"`
 	SortBy           *string `long:"sort" short:"s" description:"A field name to sort by" default-mask:"number"`
 	Verbose          *bool   `long:"verbose" description:"Verbose mode"`
-	WorkflowFileName *string `long:"workflow_file" description:"Workflow file name"`
+	WorkflowFileName *string `long:"workflow-file" description:"Workflow file name"`
 }
 
 func OverrideCLIArgs(tomlConfig *ProfileConfig, cliArgs *ProfileConfigCLIArgs) (newConfig *ProfileConfig) {

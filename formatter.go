@@ -101,16 +101,16 @@ func WriteTable(w io.Writer, profileResult ProfileInput, markdown bool, showIf f
 			if showIf("mean") {
 				data = append(data, strconv.FormatFloat(p.Mean, 'f', 6, 64))
 			}
-			if showIf("percentile50") {
+			if showIf("p50") {
 				data = append(data, strconv.FormatFloat(p.Percentile50, 'f', 6, 64))
 			}
-			if showIf("percentile90") {
+			if showIf("p90") {
 				data = append(data, strconv.FormatFloat(p.Percentile90, 'f', 6, 64))
 			}
-			if showIf("percentile95") {
+			if showIf("p95") {
 				data = append(data, strconv.FormatFloat(p.Percentile95, 'f', 6, 64))
 			}
-			if showIf("percentile99") {
+			if showIf("p99") {
 				data = append(data, strconv.FormatFloat(p.Percentile99, 'f', 6, 64))
 			}
 			if showIf("max") {

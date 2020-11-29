@@ -3,7 +3,7 @@ package ghaprofiler
 type ProfileConfigCLIArgs struct {
 	AccessToken      *string `long:"access_token"`
 	Cache            *bool   `long:"cache"`
-	CacheDirectory   *string `log:"cache-dir"`
+	CacheDirectory   *string `long:"cache-dir"`
 	ConfigPath       *string `long:"config" description:"Path to configuration TOML file"`
 	Count            *int    `long:"count"`
 	Format           *string `long:"format" description:"Output format"`

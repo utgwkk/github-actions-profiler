@@ -35,7 +35,6 @@ func main() {
 		if err != nil {
 			log.Fatalf("Failed to load %s: %v", configTomlPath, err)
 		}
-		// TODO: Override config with CLI arguments when they are given
 		config = ghaprofiler.OverrideCLIArgs(configFromTOML, &configFromArgs)
 	} else {
 		config = ghaprofiler.OverrideCLIArgs(ghaprofiler.DefaultProfileConfig(), &configFromArgs)

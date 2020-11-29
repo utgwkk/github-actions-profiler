@@ -4,6 +4,7 @@ type ProfileConfigCLIArgs struct {
 	AccessToken      *string `long:"access_token"`
 	Cache            *bool   `long:"cache" description:"Enable disk cache (default: true)"`
 	CacheDirectory   *string `long:"cache-dir" description:"Where to store cache data"`
+	Concurrency      *int    `long:"concurrency" description:"Concurrency of GitHub API client (default: 2)"`
 	ConfigPath       *string `long:"config" description:"Path to configuration TOML file"`
 	Count            *int    `long:"count"`
 	Format           *string `long:"format" description:"Output format"`
@@ -32,6 +33,11 @@ func OverrideCLIArgs(tomlConfig *ProfileConfig, cliArgs *ProfileConfigCLIArgs) (
 		newConfig.CacheDirectory = *cliArgs.CacheDirectory
 	} else {
 		newConfig.CacheDirectory = tomlConfig.CacheDirectory
+	}
+	if cliArgs.Concurrency != nil {
+		newConfig.Concurrency = *cliArgs.Concurrency
+	} else {
+		newConfig.Concurrency = tomlConfig.Concurrency
 	}
 	if cliArgs.Count != nil {
 		newConfig.Count = *cliArgs.Count

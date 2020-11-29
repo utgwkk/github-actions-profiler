@@ -10,6 +10,7 @@ import (
 	"github.com/google/go-github/v32/github"
 	"github.com/jessevdk/go-flags"
 	ghaprofiler "github.com/utgwkk/github-actions-profiler"
+	"golang.org/x/sync/errgroup"
 )
 
 var config *ghaprofiler.ProfileConfig = ghaprofiler.DefaultProfileConfig()
@@ -42,6 +43,7 @@ func main() {
 
 	if config.Verbose {
 		log.Printf("config=%v\n", configTomlPath)
+		log.Printf("concurrency=%v\n", config.Concurrency)
 		log.Printf("count=%v\n", config.Count)
 		log.Printf("format=%v\n", config.Format)
 		log.Printf("job-name-regexp=%v\n", config.JobNameRegexp)
@@ -95,41 +97,54 @@ func main() {
 		log.Println("ListWorkflowRunsByFileName finish")
 	}
 
-	jobsByJobName := make(map[string][]*github.WorkflowJob)
+	jobsByJobName := NewJobsByJobNameMap()
+	eg := new(errgroup.Group)
+	sem := make(chan struct{}, config.Concurrency)
 
 	for _, run := range workflowRuns.WorkflowRuns {
-		if config.Verbose {
-			log.Printf("ListWorkflowJobs start: run_id=%d", *run.ID)
-		}
-		jobs, _, err := client.ListWorkflowJobs(ctx, config.Owner, config.Repository, *run.ID, nil)
-		if err != nil {
-			log.Fatal(err)
-		}
-		if config.Verbose {
-			log.Printf("ListWorkflowJobs finish: run_id=%d", *run.ID)
-		}
+		sem <- struct{}{}
+		eg.Go(func() error {
+			defer func() {
+				<-sem
+			}()
+			if config.Verbose {
+				log.Printf("ListWorkflowJobs start: run_id=%d", *run.ID)
+			}
+			jobs, _, err := client.ListWorkflowJobs(ctx, config.Owner, config.Repository, *run.ID, nil)
+			if err != nil {
+				return err
+			}
+			if config.Verbose {
+				log.Printf("ListWorkflowJobs finish: run_id=%d", *run.ID)
+			}
 
-		for _, job := range jobs.Jobs {
-			jobName := *job.Name
-			if !jobNameRegex.MatchString(jobName) {
-				continue
+			for _, job := range jobs.Jobs {
+				jobName := *job.Name
+				if !jobNameRegex.MatchString(jobName) {
+					continue
+				}
+				if config.Verbose {
+					log.Printf("Job name (before replacement): %#v", jobName)
+				}
+				for _, rule := range config.Replace {
+					jobName = rule.Apply(jobName)
+				}
+				if config.Verbose {
+					log.Printf("Job name (after replacement): %#v", jobName)
+				}
+				jobsByJobName.Append(jobName, job)
 			}
-			if config.Verbose {
-				log.Printf("Job name (before replacement): %#v", jobName)
-			}
-			for _, rule := range config.Replace {
-				jobName = rule.Apply(jobName)
-			}
-			if config.Verbose {
-				log.Printf("Job name (after replacement): %#v", jobName)
-			}
-			jobsByJobName[jobName] = append(jobsByJobName[jobName], job)
-		}
+			return nil
+		})
+	}
+
+	if err = eg.Wait(); err != nil {
+		log.Fatal(err)
 	}
 
 	profileResult := make(map[string][]*ghaprofiler.TaskStepProfile)
 
-	for jobName, jobs := range jobsByJobName {
+	for jobName, jobs := range jobsByJobName.Iterate() {
 		if len(jobs) == 0 {
 			continue
 		}

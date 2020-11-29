@@ -151,10 +151,10 @@ func WriteWithFormat(w io.Writer, profileResult ProfileInput, format string) err
 		WriteJSON(w, profileResult)
 		break
 	case formatNameTable:
-		WriteTable(w, profileResult, false, func(_ string) bool { return true })
+		WriteTable(w, profileResult, false, showAll())
 		break
 	case formatNameMarkdown:
-		WriteTable(w, profileResult, true, func(_ string) bool { return true })
+		WriteTable(w, profileResult, true, showAll())
 		break
 	case formatNameTSV:
 		WriteTSV(w, profileResult)

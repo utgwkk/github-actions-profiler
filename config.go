@@ -70,6 +70,9 @@ func (config ProfileConfig) Validate() error {
 	if _, err := regexp.Compile(config.JobNameRegexp); err != nil {
 		return fmt.Errorf("Invalid regular expression: %v", err)
 	}
+	if config.Cache && config.CacheDirectory == "" {
+		return fmt.Errorf("Cache enabled but no cache directory passed")
+	}
 
 	return nil
 }

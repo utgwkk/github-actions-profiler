@@ -13,11 +13,13 @@ import (
 const (
 	formatNameJSON  = "json"
 	formatNameTable = "table"
+	formatNameTSV   = "tsv"
 )
 
 var availableFormats = []string{
 	formatNameJSON,
 	formatNameTable,
+	formatNameTSV,
 }
 
 func AvailableFormatsForCLI() string {
@@ -76,6 +78,18 @@ func WriteTable(w io.Writer, profileResult ProfileInput) error {
 	return nil
 }
 
+func WriteTSV(w io.Writer, profileResult ProfileInput) error {
+	for _, p := range profileResult {
+		fmt.Fprintf(w, "Job: %s\n", p.Name)
+		fmt.Fprintln(w, "Number\tMin\tMedian\tMean\tP50\tP90\tP95\tP99\tMax\tName")
+		for _, p := range p.Profile {
+			fmt.Fprintf(w, "%d\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%s\n", p.Number, p.Min, p.Median, p.Mean, p.Percentile50, p.Percentile90, p.Percentile95, p.Percentile99, p.Max, p.Name)
+		}
+		fmt.Fprintln(w)
+	}
+	return nil
+}
+
 func WriteWithFormat(w io.Writer, profileResult ProfileInput, format string) error {
 	switch format {
 	case formatNameJSON:
@@ -83,6 +97,9 @@ func WriteWithFormat(w io.Writer, profileResult ProfileInput, format string) err
 		break
 	case formatNameTable:
 		WriteTable(w, profileResult)
+		break
+	case formatNameTSV:
+		WriteTSV(w, profileResult)
 		break
 	default:
 		return fmt.Errorf("Invalid format: %s", format)

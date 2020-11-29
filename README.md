@@ -19,7 +19,7 @@ go get github.com/utgwkk/github-actions-profiler/cmd/github-actions-profiler
 |`cache-dir`|`string`|Where to store cache data|
 |`concurrency`|`int`|Concurrency of GitHub API client (default: 2)|
 |`count`|`int`|Count <!-- TODO: write more detail -->|
-|`format`|`string`|Output format (Supported: `table`, `json`)|
+|`format`|`string`|Output format (Supported: `table`, `json`, `tsv`)|
 |`job-name-regexp`|`string`|Filter regular expression for a job name|
 |`owner`|`string`|Repository owner name|
 |`repository`|`string`|Repository name|

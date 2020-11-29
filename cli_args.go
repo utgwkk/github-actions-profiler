@@ -9,7 +9,7 @@ type ProfileConfigCLIArgs struct {
 	Concurrency      *int    `long:"concurrency" short:"j" description:"Concurrency of GitHub API client" default-mask:"2"`
 	ConfigPath       *string `long:"config" description:"Path to configuration TOML file"`
 	Count            *int    `long:"count" short:"c" description:"Count" default-mask:"20"`
-	Format           *string `long:"format" short:"f" description:"Output format" default-mask:"table" choice:"table" choice:"json"`
+	Format           *string `long:"format" short:"f" description:"Output format" default-mask:"table" choice:"table" choice:"json" choice:"tsv"`
 	JobNameRegexp    *string `long:"job-name-regexp" description:"Filter regular expression for a job name"`
 	Owner            *string `long:"owner" description:"Repository owner name"`
 	Repository       *string `long:"repository" description:"Repository name"`

@@ -6,7 +6,7 @@ type filterFields []string
 
 type filterFieldFunc func(fieldName string) bool
 
-func only(onlyFields filterFields) filterFieldFunc {
+func Only(onlyFields filterFields) filterFieldFunc {
 	return func(fieldName string) bool {
 		for _, onlyField := range onlyFields {
 			if fieldName == onlyField {
@@ -17,7 +17,7 @@ func only(onlyFields filterFields) filterFieldFunc {
 	}
 }
 
-func exclude(excludedFields filterFields) filterFieldFunc {
+func Exclude(excludedFields filterFields) filterFieldFunc {
 	return func(fieldName string) bool {
 		for _, excludedField := range excludedFields {
 			if fieldName == excludedField {
@@ -28,13 +28,13 @@ func exclude(excludedFields filterFields) filterFieldFunc {
 	}
 }
 
-func excludePercentile() filterFieldFunc {
+func ExcludePercentile() filterFieldFunc {
 	return func(fieldName string) bool {
 		return !strings.HasPrefix(fieldName, "p")
 	}
 }
 
-func showAll() filterFieldFunc {
+func ShowAll() filterFieldFunc {
 	return func(_ string) bool {
 		return true
 	}

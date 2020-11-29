@@ -18,7 +18,7 @@ go get github.com/utgwkk/github-actions-profiler/cmd/github-actions-profiler
 |`cache`|`bool`|Enable disk cache (Default: `true`)|
 |`cache-dir`|`string`|Where to store cache data|
 |`concurrency`|`int`|Concurrency of GitHub API client (Default: 2)|
-|`count`|`int`|Count <!-- TODO: write more detail -->|
+|`number-of-job`|`int`|The number of job to analyze|
 |`format`|`string`|Output format (Default: `table`, Supported: `table`, `json`, `tsv`, `markdown`)|
 |`job-name-regexp`|`string`|Filter regular expression for a job name|
 |`owner`|`string`|Repository owner name|
@@ -40,7 +40,7 @@ You may set configuration with a TOML file and pass it with `--config <path to c
 access-token = "YOUR_ACCESS_TOKEN"
 cache = true
 cache-dir = "/tmp/cache/dir"
-count = 50
+number-of-job = 50
 format = "table"
 job-name-regexp = "Perl"
 owner = "your-name"

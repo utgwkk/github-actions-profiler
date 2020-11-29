@@ -5,6 +5,6 @@ owner = "utgwkk"
 repository = "Twitter-Text"
 workflow-file = "ci.yml"
 format = "table"
-count = 100
+number-of-job = 100
 sort = "number"
 concurrency = 2

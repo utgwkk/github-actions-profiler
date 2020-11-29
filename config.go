@@ -17,7 +17,7 @@ type ProfileConfig struct {
 	Cache            bool          `toml:"cache"`
 	CacheDirectory   string        `toml:"cache-directory"`
 	Concurrency      int           `toml:"concurrency"`
-	Count            int           `toml:"count"`
+	NumberOfJob      int           `toml:"number-of-job"`
 	AccessToken      string        `toml:"access-token"`
 	Format           string        `toml:"format"`
 	SortBy           string        `toml:"sort"`
@@ -42,7 +42,7 @@ func defaultCacheDirectoryPath() string {
 func DefaultProfileConfig() *ProfileConfig {
 	return &ProfileConfig{
 		Concurrency:    2,
-		Count:          20,
+		NumberOfJob:    20,
 		Cache:          true,
 		CacheDirectory: defaultCacheDirectoryPath(),
 		Format:         "table",
@@ -63,8 +63,8 @@ func (config ProfileConfig) Validate() error {
 	if config.Concurrency <= 0 {
 		return fmt.Errorf("Concurrency must be a positive integer")
 	}
-	if config.Count <= 0 {
-		return fmt.Errorf("Count must be a positive integer")
+	if config.NumberOfJob <= 0 {
+		return fmt.Errorf("NumberOfJob must be a positive integer")
 	}
 	if !IsValidFormatName(config.Format) {
 		return fmt.Errorf("Invalid format: %s", config.Format)
@@ -109,7 +109,7 @@ func LoadConfigFromTOML(filename string) (*ProfileConfig, error) {
 func (c ProfileConfig) Dump() string {
 	var dump string
 	dump += fmt.Sprintf("concurrency=%v\n", c.Concurrency)
-	dump += fmt.Sprintf("count=%v\n", c.Count)
+	dump += fmt.Sprintf("number-of-job=%v\n", c.NumberOfJob)
 	dump += fmt.Sprintf("format=%v\n", c.Format)
 	dump += fmt.Sprintf("job-name-regexp=%v\n", c.JobNameRegexp)
 	dump += fmt.Sprintf("owner=%v\n", c.Owner)

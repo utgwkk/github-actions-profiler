@@ -10,6 +10,8 @@ import (
 	"golang.org/x/oauth2"
 )
 
+var userAgent = "github-actions-profiler (+https://github.com/utgwkk/github-actions-profiler)"
+
 type Client struct {
 	githubClient *github.Client
 }
@@ -57,6 +59,8 @@ func NewClientWithConfig(ctx context.Context, config *ClientConfig) *Client {
 			client.githubClient = github.NewClient(nil)
 		}
 	}
+
+	client.githubClient.UserAgent = userAgent
 
 	return client
 }

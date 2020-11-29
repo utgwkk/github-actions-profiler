@@ -65,7 +65,7 @@ func exclude(excludedFields filterFields) filterFieldFunc {
 
 func excludePercentile() filterFieldFunc {
 	return func(fieldName string) bool {
-		return strings.HasPrefix(fieldName, "p")
+		return !strings.HasPrefix(fieldName, "p")
 	}
 }
 

@@ -15,16 +15,16 @@ go get github.com/utgwkk/github-actions-profiler/cmd/github-actions-profiler
 |arguments|type|description|
 |:-|:-|:-|
 |`access_token`|`string`|An access token|
-|`cache`|`bool`|Enable disk cache (default: `true`)|
+|`cache`|`bool`|Enable disk cache (Default: `true`)|
 |`cache-dir`|`string`|Where to store cache data|
-|`concurrency`|`int`|Concurrency of GitHub API client (default: 2)|
+|`concurrency`|`int`|Concurrency of GitHub API client (Default: 2)|
 |`count`|`int`|Count <!-- TODO: write more detail -->|
-|`format`|`string`|Output format (Supported: `table`, `json`, `tsv`, `markdown`)|
+|`format`|`string`|Output format (Default: `table`, Supported: `table`, `json`, `tsv`, `markdown`)|
 |`job-name-regexp`|`string`|Filter regular expression for a job name|
 |`owner`|`string`|Repository owner name|
 |`repository`|`string`|Repository name|
 |`reverse`|`bool`|Reverse the result of sort|
-|`sort`|`string`|A field name to sort by (Supported: `number`, `min`, `max`, `median`, `mean`, `p50`, `p90`, `p95`, `p99`)|
+|`sort`|`string`|A field name to sort by (Default: `number`, Supported: `number`, `min`, `max`, `median`, `mean`, `p50`, `p90`, `p95`, `p99`)|
 |`verbose`|`bool`|Verbose mode|
 |`workflow_file`|`string`|Workflow file name (without `.github/workflows/`)|
 

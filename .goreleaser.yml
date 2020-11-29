@@ -1,0 +1,10 @@
+builds:
+  - main: ./cmd/github-actions-profiler
+    binary: github-actions-profiler
+    goos:
+      - windows
+      - darwin
+      - linux
+    goarch:
+      - 386
+      - amd64

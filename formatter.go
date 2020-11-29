@@ -24,6 +24,51 @@ var availableFormats = []string{
 	formatNameTSV,
 }
 
+var fields = []string{
+	"number",
+	"min",
+	"median",
+	"mean",
+	"p50",
+	"p90",
+	"p95",
+	"p99",
+	"max",
+	"name",
+}
+
+type filterFields []string
+
+type filterFieldFunc func(fieldName string) bool
+
+func only(onlyFields filterFields) filterFieldFunc {
+	return func(fieldName string) bool {
+		for _, onlyField := range onlyFields {
+			if fieldName == onlyField {
+				return true
+			}
+		}
+		return false
+	}
+}
+
+func exclude(excludedFields filterFields) filterFieldFunc {
+	return func(fieldName string) bool {
+		for _, excludedField := range excludedFields {
+			if fieldName == excludedField {
+				return false
+			}
+		}
+		return true
+	}
+}
+
+func excludePercentile() filterFieldFunc {
+	return func(fieldName string) bool {
+		return strings.HasPrefix(fieldName, "p")
+	}
+}
+
 func AvailableFormatsForCLI() string {
 	return strings.Join(availableFormats, ", ")
 }

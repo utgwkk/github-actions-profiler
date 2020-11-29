@@ -4,6 +4,8 @@ A profiler for GitHub Actions workflow
 
 ## Installation
 
+Download executable from [Releases](https://github.com/utgwkk/github-actions-profiler/releases). If you want to install HEAD version, run `go get`.
+
 ```
 go get github.com/utgwkk/github-actions-profiler/cmd/github-actions-profiler
 ```

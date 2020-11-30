@@ -7,24 +7,29 @@ import (
 	"path"
 	"regexp"
 
+	"github.com/jessevdk/go-flags"
 	"github.com/pelletier/go-toml"
 )
 
 type ProfileConfig struct {
-	Owner            string        `toml:"owner"`
-	Repository       string        `toml:"repository"`
-	WorkflowFileName string        `toml:"workflow-file"`
-	Cache            bool          `toml:"cache"`
-	CacheDirectory   string        `toml:"cache-directory"`
-	Concurrency      int           `toml:"concurrency"`
-	NumberOfJob      int           `toml:"number-of-job"`
-	AccessToken      string        `toml:"access-token"`
-	Format           string        `toml:"format"`
-	SortBy           string        `toml:"sort"`
-	Reverse          bool          `toml:"reverse"`
-	Verbose          bool          `toml:"verbose"`
-	JobNameRegexp    string        `toml:"job-name-regexp"`
-	Replace          []replaceRule `toml:"replace_rule"`
+	ConfigPath func(string) `long:"config" description:"Path to configuration TOML file"`
+
+	AccessToken      string `toml:"access-token" long:"access-token" description:"Access token for GitHub" env:"GITHUB_ACTIONS_PROFILER_TOKEN"`
+	Cache            bool   `toml:"cache" long:"cache" description:"Enable disk cache" default-mask:"true"`
+	CacheDirectory   string `toml:"cache-directory" long:"cache-dir" description:"Where to store cache data"`
+	Concurrency      int    `toml:"concurrency" long:"concurrency" short:"j" description:"Concurrency of GitHub API client" default-mask:"2"`
+	Format           string `toml:"format" long:"number-of-job" short:"n" description:"The number of job to analyze" default-mask:"20"`
+	JobNameRegexp    string `toml:"job-name-regexp" long:"format" short:"f" description:"Output format" default-mask:"table" choice:"table" choice:"json" choice:"tsv" choice:"markdown"`
+	NumberOfJob      int    `toml:"number-of-job" long:"job-name-regexp" description:"Filter regular expression for a job name"`
+	Owner            string `toml:"owner" long:"owner" description:"Repository owner name"`
+	Repository       string `toml:"repository" long:"repository" description:"Repository name"`
+	Reverse          bool   `toml:"reverse" long:"reverse" short:"r" description:"Reverse the result of sort" default-mask:"false"`
+	SortBy           string `toml:"sort" long:"sort" short:"s" description:"A field name to sort by" default-mask:"number"`
+	Verbose          bool   `toml:"verbose" long:"verbose" description:"Verbose mode"`
+	WorkflowFileName string `toml:"workflow-file" long:"workflow-file" description:"Workflow file name"`
+
+	// Not in CLI arguments
+	Replace []replaceRule `toml:"replace_rule"`
 }
 
 var defaultCacheDirectoryName = "github-actions-profiler-httpcache"
@@ -37,6 +42,10 @@ func defaultCacheDirectoryPath() string {
 
 	// fallback to temporary directory
 	return path.Join(os.TempDir(), defaultCacheDirectoryName)
+}
+
+func NewCLIParser(dst *ProfileConfig) *flags.Parser {
+	return flags.NewParser(dst, flags.Default)
 }
 
 func DefaultProfileConfig() *ProfileConfig {

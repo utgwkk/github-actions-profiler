@@ -1,0 +1,15 @@
+access-token = "YOUR_ACCESS_TOKEN"
+cache = true
+cache-directory = "/tmp/cache"
+owner = "utgwkk"
+repository = "Twitter-Text"
+workflow-file = "ci.yml"
+format = "table"
+number-of-job = 100
+sort = "number"
+concurrency = 2
+
+[[replace_rule]]
+# normalize Perl version
+regexp = 'Perl 5\.[0-9]+'
+replace = 'Perl'

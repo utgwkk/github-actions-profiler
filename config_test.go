@@ -5,6 +5,11 @@ import (
 	"testing"
 )
 
+type ReplaceRuleWithoutRegex struct {
+	Regexp  string
+	Replace string
+}
+
 func Test_Validate(t *testing.T) {
 	config, err := LoadConfigFromTOML("fixtures/valid-config.toml")
 	if err != nil {
@@ -76,5 +81,44 @@ func Test_ParseCLIArgs(t *testing.T) {
 
 	if !reflect.DeepEqual(config, expectedConfig) {
 		t.Fatalf("Loaded config is not correct\ngot: %#v\nwant: %#v", config, expectedConfig)
+	}
+}
+
+func TestParseCLIArgsLoadReplaceRule(t *testing.T) {
+	config := DefaultProfileConfig()
+	config.ConfigPath = func(path string) {
+		var err error
+		configFromTOML, err := LoadConfigFromTOML(path)
+		if err != nil {
+			t.Fatal(err)
+		}
+		config = configFromTOML
+	}
+	parser := NewCLIParser(config)
+	args := []string{
+		"--config",
+		"fixtures/valid-config-with-replace-rule.toml",
+	}
+	args, err := parser.ParseArgs(args)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var replaceRules []*ReplaceRuleWithoutRegex
+	for _, rule := range config.Replace {
+		replaceRules = append(replaceRules, &ReplaceRuleWithoutRegex{
+			Regexp:  rule.Regexp,
+			Replace: rule.Replace,
+		})
+	}
+	expectedReplaceRules := []*ReplaceRuleWithoutRegex{
+		&ReplaceRuleWithoutRegex{
+			Regexp:  `Perl 5\.[0-9]+`,
+			Replace: "Perl",
+		},
+	}
+
+	if !reflect.DeepEqual(replaceRules, expectedReplaceRules) {
+		t.Fatalf("Loaded replace rules mismatched\ngot: %#v\nwant: %#v", replaceRules, expectedReplaceRules)
 	}
 }

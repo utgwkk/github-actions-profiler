@@ -117,6 +117,11 @@ func (c ProfileConfig) Dump() string {
 	dump += fmt.Sprintf("reverse=%v\n", c.Reverse)
 	dump += fmt.Sprintf("sort=%v\n", c.SortBy)
 	// We don't write out token
+	if c.AccessToken == "" {
+		dump += "access token not set\n"
+	} else {
+		dump += "access token set\n"
+	}
 	dump += fmt.Sprintf("workflow-file=%v\n", c.WorkflowFileName)
 	dump += fmt.Sprintf("replace=%#v\n", c.Replace)
 	dump += fmt.Sprintf("cache=%v\n", c.Cache)

@@ -114,7 +114,7 @@ func TestParseCLIArgsLoadReplaceRule(t *testing.T) {
 		})
 	}
 	expectedReplaceRules := []*ReplaceRuleWithoutRegex{
-		&ReplaceRuleWithoutRegex{
+		{
 			Regexp:  `Perl 5\.[0-9]+`,
 			Replace: "Perl",
 		},

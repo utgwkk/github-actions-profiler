@@ -15,8 +15,6 @@ import (
 
 var config *ghaprofiler.ProfileConfig = ghaprofiler.DefaultProfileConfig()
 
-const accessTokenEnvVariableName = "GITHUB_ACTIONS_PROFILER_TOKEN"
-
 func main() {
 	ctx := context.Background()
 
@@ -47,13 +45,6 @@ func main() {
 
 	if err := config.Validate(); err != nil {
 		log.Fatal(err)
-	}
-
-	if config.AccessToken == "" {
-		accessTokenFromEnv := os.Getenv(accessTokenEnvVariableName)
-		if accessTokenFromEnv != "" {
-			config.AccessToken = accessTokenFromEnv
-		}
 	}
 
 	jobNameRegex, err := regexp.Compile(config.JobNameRegexp)

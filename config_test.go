@@ -46,7 +46,7 @@ func Test_LoadFromTOML(t *testing.T) {
 	}
 }
 
-func Test_ParseCLIArgs(t *testing.T) {
+func TestParseCLIArgs(t *testing.T) {
 	config := DefaultProfileConfig()
 	config.ConfigPath = func(path string) {
 		var err error

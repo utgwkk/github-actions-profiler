@@ -86,6 +86,49 @@ func TestParseCLIArgs(t *testing.T) {
 	}
 }
 
+func TestParseCLIArgsOverride(t *testing.T) {
+	config := DefaultProfileConfig()
+	config.ConfigPath = func(path string) {
+		var err error
+		configFromTOML, err := LoadConfigFromTOML(path)
+		if err != nil {
+			t.Fatal(err)
+		}
+		config = configFromTOML
+	}
+	parser := NewCLIParser(config)
+	args := []string{
+		"--config",
+		"fixtures/valid-config.toml",
+		"--verbose",
+		"--reverse",
+		"-n", "10",
+	}
+	args, err := parser.ParseArgs(args)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	expectedConfig := &ProfileConfig{
+		AccessToken:      "YOUR_ACCESS_TOKEN",
+		Concurrency:      2,
+		Cache:            true,
+		CacheDirectory:   "/tmp/cache",
+		NumberOfJob:      10,
+		Format:           "table",
+		Owner:            "utgwkk",
+		Repository:       "Twitter-Text",
+		SortBy:           "number",
+		Verbose:          true,
+		Reverse:          true,
+		WorkflowFileName: "ci.yml",
+	}
+
+	if !reflect.DeepEqual(config, expectedConfig) {
+		t.Fatalf("Loaded config is not correct\ngot: %#v\nwant: %#v", config, expectedConfig)
+	}
+}
+
 func TestParseCLIArgsLoadReplaceRule(t *testing.T) {
 	config := DefaultProfileConfig()
 	config.ConfigPath = func(path string) {

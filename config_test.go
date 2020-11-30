@@ -76,6 +76,8 @@ func Test_ParseCLIArgs(t *testing.T) {
 		Owner:            "utgwkk",
 		Repository:       "Twitter-Text",
 		SortBy:           "number",
+		Verbose:          false,
+		Reverse:          false,
 		WorkflowFileName: "ci.yml",
 	}
 

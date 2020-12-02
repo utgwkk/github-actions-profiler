@@ -71,19 +71,19 @@ func SortProfileBy(profile TaskStepProfileResult, fieldName string) error {
 		}
 	case "p50":
 		by = func(t1, t2 *TaskStepProfile) bool {
-			return t1.Percentile50 < t2.Percentile50
+			return t1.Percentiles[50].Value < t2.Percentiles[50].Value
 		}
 	case "p90":
 		by = func(t1, t2 *TaskStepProfile) bool {
-			return t1.Percentile90 < t2.Percentile90
+			return t1.Percentiles[90].Value < t2.Percentiles[90].Value
 		}
 	case "p95":
 		by = func(t1, t2 *TaskStepProfile) bool {
-			return t1.Percentile95 < t2.Percentile95
+			return t1.Percentiles[95].Value < t2.Percentiles[95].Value
 		}
 	case "p99":
 		by = func(t1, t2 *TaskStepProfile) bool {
-			return t1.Percentile99 < t2.Percentile99
+			return t1.Percentiles[99].Value < t2.Percentiles[99].Value
 		}
 	default:
 		return fmt.Errorf("Invalid field: %s", fieldName)

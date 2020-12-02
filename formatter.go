@@ -70,10 +70,10 @@ func WriteTable(w io.Writer, profileResult ProfileInput, markdown bool) error {
 				strconv.FormatFloat(p.Min, 'f', 6, 64),
 				strconv.FormatFloat(p.Median, 'f', 6, 64),
 				strconv.FormatFloat(p.Mean, 'f', 6, 64),
-				strconv.FormatFloat(p.Percentile50, 'f', 6, 64),
-				strconv.FormatFloat(p.Percentile90, 'f', 6, 64),
-				strconv.FormatFloat(p.Percentile95, 'f', 6, 64),
-				strconv.FormatFloat(p.Percentile99, 'f', 6, 64),
+				strconv.FormatFloat(p.Percentiles[50].Value, 'f', 6, 64),
+				strconv.FormatFloat(p.Percentiles[90].Value, 'f', 6, 64),
+				strconv.FormatFloat(p.Percentiles[95].Value, 'f', 6, 64),
+				strconv.FormatFloat(p.Percentiles[99].Value, 'f', 6, 64),
 				strconv.FormatFloat(p.Max, 'f', 6, 64),
 				p.Name,
 			})
@@ -95,7 +95,7 @@ func WriteTSV(w io.Writer, profileResult ProfileInput) error {
 		fmt.Fprintf(w, "Job: %s\n", p.Name)
 		fmt.Fprintln(w, "Number\tMin\tMedian\tMean\tP50\tP90\tP95\tP99\tMax\tName")
 		for _, p := range p.Profile {
-			fmt.Fprintf(w, "%d\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%s\n", p.Number, p.Min, p.Median, p.Mean, p.Percentile50, p.Percentile90, p.Percentile95, p.Percentile99, p.Max, p.Name)
+			fmt.Fprintf(w, "%d\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%s\n", p.Number, p.Min, p.Median, p.Mean, p.Percentiles[50].Value, p.Percentiles[90].Value, p.Percentiles[95].Value, p.Percentiles[99].Value, p.Max, p.Name)
 		}
 		fmt.Fprintln(w)
 	}

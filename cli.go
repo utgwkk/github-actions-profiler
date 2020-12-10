@@ -12,7 +12,40 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-func StartCLI(ctx context.Context, args []string) {
+type CLI struct {
+	verbose bool
+}
+
+func NewCLI() *CLI {
+	return &CLI{}
+}
+
+func (cli *CLI) SetVerbosity(verbose bool) {
+	cli.verbose = verbose
+}
+
+func (cli *CLI) logVerbose(s interface{}) {
+	if !cli.verbose {
+		return
+	}
+	cli.logVerbose(s)
+}
+
+func (cli *CLI) loglnVerbose(s interface{}) {
+	if !cli.verbose {
+		return
+	}
+	log.Println(s)
+}
+
+func (cli *CLI) logfVerbose(format string, args ...interface{}) {
+	if !cli.verbose {
+		return
+	}
+	log.Printf(format, args...)
+}
+
+func (cli *CLI) Start(ctx context.Context, args []string) {
 	var config *ProfileConfig = DefaultProfileConfig()
 	var configFromArgs ProfileConfigCLIArgs
 	args, err := flags.ParseArgs(&configFromArgs, args)
@@ -32,11 +65,10 @@ func StartCLI(ctx context.Context, args []string) {
 	} else {
 		config = OverrideCLIArgs(DefaultProfileConfig(), &configFromArgs)
 	}
+	cli.SetVerbosity(config.Verbose)
 
-	if config.Verbose {
-		log.Printf("config=%v", configTomlPath)
-		log.Print(config.Dump())
-	}
+	cli.logfVerbose("config=%v", configTomlPath)
+	cli.logVerbose(config.Dump())
 
 	if err := config.Validate(); err != nil {
 		log.Fatal(err)
@@ -59,16 +91,12 @@ func StartCLI(ctx context.Context, args []string) {
 		},
 	}
 
-	if config.Verbose {
-		log.Println("ListWorkflowRunsByFileName start")
-	}
+	cli.loglnVerbose("ListWorkflowRunsByFileName start")
 	workflowRuns, _, err := client.ListWorkflowRunsByFileName(ctx, config.Owner, config.Repository, config.WorkflowFileName, listWorkflowRunsOpts)
 	if err != nil {
 		log.Fatal(err)
 	}
-	if config.Verbose {
-		log.Println("ListWorkflowRunsByFileName finish")
-	}
+	cli.loglnVerbose("ListWorkflowRunsByFileName finish")
 
 	jobsByJobName := NewJobsByJobNameMap()
 	eg := new(errgroup.Group)
@@ -80,31 +108,23 @@ func StartCLI(ctx context.Context, args []string) {
 			defer func() {
 				<-sem
 			}()
-			if config.Verbose {
-				log.Printf("ListWorkflowJobs start: run_id=%d", *run.ID)
-			}
+			cli.logfVerbose("ListWorkflowJobs start: run_id=%d", *run.ID)
 			jobs, _, err := client.ListWorkflowJobs(ctx, config.Owner, config.Repository, *run.ID, nil)
 			if err != nil {
 				return err
 			}
-			if config.Verbose {
-				log.Printf("ListWorkflowJobs finish: run_id=%d", *run.ID)
-			}
+			cli.logfVerbose("ListWorkflowJobs finish: run_id=%d", *run.ID)
 
 			for _, job := range jobs.Jobs {
 				jobName := *job.Name
 				if !jobNameRegex.MatchString(jobName) {
 					continue
 				}
-				if config.Verbose {
-					log.Printf("Job name (before replacement): %#v", jobName)
-				}
+				cli.logfVerbose("Job name (before replacement): %#v", jobName)
 				for _, rule := range config.Replace {
 					jobName = rule.Apply(jobName)
 				}
-				if config.Verbose {
-					log.Printf("Job name (after replacement): %#v", jobName)
-				}
+				cli.logfVerbose("Job name (after replacement): %#v", jobName)
 				jobsByJobName.Append(jobName, job)
 			}
 			return nil

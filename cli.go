@@ -6,7 +6,9 @@ import (
 	"os"
 	"regexp"
 	"sort"
+	"strings"
 
+	"github.com/go-git/go-git/v5"
 	"github.com/google/go-github/v32/github"
 	"github.com/jessevdk/go-flags"
 	"golang.org/x/sync/errgroup"
@@ -45,6 +47,43 @@ func (cli *CLI) logfVerbose(format string, args ...interface{}) {
 	log.Printf(format, args...)
 }
 
+func (cli *CLI) overrideRepositoryFromCWD(config *ProfileConfig) {
+	if config.Owner != "" && config.Repository != "" {
+		return
+	}
+	cwd, err := os.Getwd()
+	if err != nil {
+		return
+	}
+	repo, err := git.PlainOpen(cwd)
+	if err != nil {
+		cli.loglnVerbose(err)
+		return
+	}
+	remote, err := repo.Remote("origin")
+	if err != nil {
+		cli.loglnVerbose(err)
+		return
+	}
+	urls := remote.Config().URLs
+	if len(urls) == 0 {
+		return
+	}
+	url := urls[0]
+	splitted := strings.Split(url, "/")
+	if len(splitted) <= 1 {
+		return
+	}
+	owner, repoName := splitted[len(splitted)-2], splitted[len(splitted)-1]
+	repoName = strings.Replace(repoName, ".git", "", 1)
+	if lastColonPos := strings.LastIndex(owner, ":"); lastColonPos != -1 {
+		// git@github.com:owner/repo.git
+		owner = owner[lastColonPos:]
+	}
+	config.Owner = owner
+	config.Repository = repoName
+}
+
 func (cli *CLI) Start(ctx context.Context, args []string) {
 	var config *ProfileConfig = DefaultProfileConfig()
 	var configFromArgs ProfileConfigCLIArgs
@@ -65,6 +104,7 @@ func (cli *CLI) Start(ctx context.Context, args []string) {
 	} else {
 		config = OverrideCLIArgs(DefaultProfileConfig(), &configFromArgs)
 	}
+	cli.overrideRepositoryFromCWD(config)
 	cli.SetVerbosity(config.Verbose)
 
 	cli.logfVerbose("config=%v", configTomlPath)

@@ -28,7 +28,7 @@ func (cli *CLI) logVerbose(s interface{}) {
 	if !cli.verbose {
 		return
 	}
-	cli.logVerbose(s)
+	log.Print(s)
 }
 
 func (cli *CLI) loglnVerbose(s interface{}) {
